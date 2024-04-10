@@ -22,6 +22,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	win = WinApp::GetInstance();
 	win->CreateGameWindow(L"LE2A_12_クロカワ_ツバサ");// タイトル
 
+
 	// DirectX初期化処理
 	dxCommon = DirectXCommon::GetInstance();
 	dxCommon->Initialize(win);

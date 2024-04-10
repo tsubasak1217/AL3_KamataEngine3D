@@ -125,18 +125,6 @@
     <ClInclude Include="input\Input.h">
       <Filter>ヘッダー ファイル\input</Filter>
     </ClInclude>
-    <ClInclude Include="math\Matrix4x4.h">
-      <Filter>ヘッダー ファイル\math</Filter>
-    </ClInclude>
-    <ClInclude Include="math\Vector3.h">
-      <Filter>ヘッダー ファイル\math</Filter>
-    </ClInclude>
-    <ClInclude Include="math\Vector2.h">
-      <Filter>ヘッダー ファイル\math</Filter>
-    </ClInclude>
-    <ClInclude Include="math\Vector4.h">
-      <Filter>ヘッダー ファイル\math</Filter>
-    </ClInclude>
     <ClInclude Include="3d\AxisIndicator.h">
       <Filter>ヘッダー ファイル\3d</Filter>
     </ClInclude>
@@ -157,6 +145,12 @@
     </ClInclude>
     <ClInclude Include="3d\ObjectColor.h">
       <Filter>ヘッダー ファイル\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="math\MatrixNxN.h">
+      <Filter>ヘッダー ファイル\math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\VectorN.h">
+      <Filter>ヘッダー ファイル\math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

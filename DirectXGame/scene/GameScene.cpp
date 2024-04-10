@@ -11,9 +11,17 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+
+	// テクスチャの読み込み
+	textureHandle_ = TextureManager::Load("uvChecker.png");
+	sprite_ = Sprite::Create(textureHandle_, {100, 50});
 }
 
-void GameScene::Update() {}
+void GameScene::Update() {
+
+	
+
+}
 
 void GameScene::Draw() {
 
@@ -52,6 +60,8 @@ void GameScene::Draw() {
 
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
+	sprite_->Draw();
+
 	/// </summary>
 
 	// スプライト描画後処理

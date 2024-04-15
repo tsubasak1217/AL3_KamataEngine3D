@@ -8,10 +8,12 @@ GameScene::GameScene() {}
 
 GameScene::~GameScene() { 
 	delete sprite_;
-	delete model_;
+	delete player_;
 }
 
 void GameScene::Initialize() {
+
+	player_ = new Player;
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
@@ -20,37 +22,13 @@ void GameScene::Initialize() {
 	// テクスチャの読み込み
 	textureHandle_ = TextureManager::Load("uvChecker.png");
 	sprite_ = Sprite::Create(textureHandle_, {100, 50});
-	model_ = Model::Create();
+	player_->SetModel(Model::Create());
 
 	wt_.Initialize();
 	vp_.Initialize();
-
-	// サウンド
-	soundHandle_ = audio_->LoadWave("fanfare.wav");
-	audio_->PlayWave(soundHandle_,true);
-
-	// デバックカメラ
-	dc_ = new DebugCamera(1280,720);
-
-	// ライン
-	PrimitiveDrawer::GetInstance()->SetViewProjection(&dc_->GetViewProjection());
-
-	// 軸表示有効化
-	AxisIndicator::GetInstance()->SetVisible(true);
-	AxisIndicator::GetInstance()->SetTargetViewProjection(&dc_->GetViewProjection());
 }
 
 void GameScene::Update() {
-
-	// スプライトの移動---------------------------------------
-	Vector2 spritePos_ = sprite_->GetPosition();
-	spritePos_ += {2.0f, 1.0f};
-	sprite_->SetPosition(spritePos_);
-
-	//音声の停止---------------------------------------------
-	if (input_->TriggerKey(DIK_SPACE)) {
-		audio_->StopWave(soundHandle_);
-	}
 
 	// デバッグテキストの出力----------------------------------
 #ifdef _DEBUG
@@ -62,8 +40,6 @@ void GameScene::Update() {
 	ImGui::End();
 #endif // DEBUG
 
-	// デバックカメラ
-	dc_->Update();
 }
 
 void GameScene::Draw() {
@@ -92,8 +68,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	model_->Draw(wt_, dc_->GetViewProjection(), textureHandle_); // モデルの描画
-	PrimitiveDrawer::GetInstance()->DrawLine3d({0, 0, 0}, {0, 10, 0}, {1.0f, 0.0f, 0.0f, 1.0f});// ラインの描画
+	player_->GetModel()->Draw(wt_, vp_, textureHandle_); // モデルの描画
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -107,8 +82,6 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	///
-	
-	sprite_->Draw(); // スプライトの描画---------------------
 
 	/// </summary>
 

@@ -9,6 +9,7 @@
 #include "WorldTransform.h"
 #include "DebugCamera.h"
 #include "AxisIndicator.h"
+#include "player.h"
 
 /// <summary>
 /// ゲームシーン
@@ -45,10 +46,9 @@ private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
-	Model* model_ = nullptr;
 
-	//デバックカメラ
-	DebugCamera* dc_ = nullptr;
+	// プレイヤー
+	Player* player_ = nullptr;
 
 	// 3d描画のための変数
 	WorldTransform wt_;
@@ -57,9 +57,6 @@ private: // メンバ変数
 	// テクスチャ
 	uint32_t textureHandle_;
 	Sprite* sprite_ = nullptr;
-
-	// サウンド
-	uint32_t soundHandle_ = 0;
 
 	// imgui
 	float inputFloat[3] = {0.0f, 0.0f, 0.0f};

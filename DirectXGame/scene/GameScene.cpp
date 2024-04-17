@@ -28,6 +28,7 @@ void GameScene::Initialize() {
 	vp_.Initialize();
 }
 
+
 void GameScene::Update() {
 
 	// デバッグテキストの出力----------------------------------

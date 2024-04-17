@@ -24,6 +24,9 @@ void GameScene::Initialize() {
 	sprite_ = Sprite::Create(textureHandle_, {100, 50});
 	player_->SetModel(Model::Create());
 
+	// デバックカメラ
+	dc_ = new DebugCamera(1280, 720);
+
 	wt_.Initialize();
 	vp_.Initialize();
 }

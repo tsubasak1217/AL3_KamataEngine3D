@@ -50,6 +50,9 @@ private: // メンバ変数
 	// プレイヤー
 	Player* player_ = nullptr;
 
+	// デバックカメラ
+	DebugCamera* dc_ = nullptr;
+
 	// 3d描画のための変数
 	WorldTransform wt_;
 	ViewProjection vp_;

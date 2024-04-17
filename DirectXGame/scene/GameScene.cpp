@@ -31,13 +31,13 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 
+	player_->Update();
+
 	// デバッグテキストの出力----------------------------------
 #ifdef _DEBUG
-	ImGui::Begin("Debug1");
-	//ImGui::Text("Kamata Tarou %d.%d.%d", 2050, 12, 31);
-	ImGui::InputFloat3("InputFloat3", inputFloat);
-	ImGui::SliderFloat3("SliderFloat3", inputFloat,0.0f,1.0f);
-	ImGui::ShowDemoWindow();
+	ImGui::Begin("Player");
+	ImGui::InputFloat3("playerPos", &player_->GetWorldTransform().translation_.x);
+	ImGui::SliderFloat3("playerPoss", &player_->GetWorldTransform().translation_.x, 0.0f, 1.0f);
 	ImGui::End();
 #endif // DEBUG
 
@@ -69,7 +69,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	player_->GetModel()->Draw(wt_, vp_, textureHandle_); // モデルの描画
+	player_->GetModel()->Draw(player_->GetWorldTransform(), vp_, textureHandle_); // モデルの描画
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

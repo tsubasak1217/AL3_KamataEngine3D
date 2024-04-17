@@ -1,5 +1,7 @@
 ﻿#include "Model.h"
 #include "WorldTransform.h"
+#include "ViewProjection.h"
+#include "Input.h"
 
 class Player {
 
@@ -18,8 +20,19 @@ public:
 	void Draw();
 
 private:
+
+	// 入力
+	Input* input_ = nullptr;
+
+	// 拡縮・回転・移動に関する変数
+	Vector3 scale_;
+	Vector3 rotate_;
+	Vector3 moveVec_;
+	float moveSpeed_;
+
 	// ワールド変換データ
 	WorldTransform wt_;
+
 	// モデル
 	Model* model_ = nullptr;
 	// テクスチャハンドル
@@ -30,4 +43,5 @@ public:
 	Model* GetModel() { return model_; }
 	void SetModel(Model* model) { model_ = model; }
 
+	WorldTransform& GetWorldTransform() { return wt_; }
 };

@@ -58,6 +58,9 @@
     <Filter Include="ソース ファイル\game">
       <UniqueIdentifier>{cc3a5d9c-a18c-4105-8f13-5bcbf597cc90}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\math\Func">
+      <UniqueIdentifier>{d932a3bc-4b4f-40f6-9f32-9a77cb94db1a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -77,6 +80,12 @@
     </ClCompile>
     <ClCompile Include="game\player.cpp">
       <Filter>ソース ファイル\game</Filter>
+    </ClCompile>
+    <ClCompile Include="math\Func\MyFunc.cpp">
+      <Filter>ソース ファイル\math\Func</Filter>
+    </ClCompile>
+    <ClCompile Include="math\Func\Easing.cpp">
+      <Filter>ソース ファイル\math\Func</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -155,20 +164,32 @@
     <ClInclude Include="3d\ObjectColor.h">
       <Filter>ヘッダー ファイル\3d</Filter>
     </ClInclude>
-    <ClInclude Include="math\Matrix4x4.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="math\Vector2.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="math\Vector3.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="math\Vector4.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="game\player.h">
       <Filter>ヘッダー ファイル\game</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Func\MyFunc.h">
+      <Filter>ソース ファイル\math\Func</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Func\Easing.h">
+      <Filter>ソース ファイル\math\Func</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Vector2.h">
+      <Filter>ヘッダー ファイル\math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Vector3.h">
+      <Filter>ヘッダー ファイル\math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Matrix4x4.h">
+      <Filter>ヘッダー ファイル\math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Vector4.h">
+      <Filter>ヘッダー ファイル\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix3x3.h">
+      <Filter>ヘッダー ファイル\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix2x2.h">
+      <Filter>ヘッダー ファイル\math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

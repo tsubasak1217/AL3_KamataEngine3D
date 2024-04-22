@@ -1,5 +1,7 @@
 ﻿#include "player.h"
 #include "MyFunc.h"
+#include <algorithm>
+#include <environment.h>
 
 Player::Player() { Init(); }
 
@@ -42,6 +44,10 @@ void Player::Update() {
 	wt_.scale_ = scale_;
 	wt_.translation_ += moveVec_;
 	wt_.rotation_ = rotate_;
+
+	// 移動制限
+	wt_.translation_.x = std::clamp(wt_.translation_.x, -33.0f, 33.0f);
+	wt_.translation_.y = std::clamp(wt_.translation_.y, -18.0f, 18.0f);
 
 	// ワールド行列の作成
 

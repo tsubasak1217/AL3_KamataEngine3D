@@ -24,6 +24,8 @@ private:
 	// 入力
 	Input* input_ = nullptr;
 
+	// 半径
+	float radius_ = 64.0f;
 	// 拡縮・回転・移動に関する変数
 	Vector3 scale_;
 	Vector3 rotate_;

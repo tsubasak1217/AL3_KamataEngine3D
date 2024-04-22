@@ -1,12 +1,12 @@
 #include "GameScene.h"
-#include "TextureManager.h"
 #include "ImGuiManager.h"
 #include "PrimitiveDrawer.h"
+#include "TextureManager.h"
 #include <cassert>
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() { 
+GameScene::~GameScene() {
 	delete sprite_;
 	delete player_;
 }
@@ -26,11 +26,14 @@ void GameScene::Initialize() {
 
 	// デバックカメラ
 	dc_ = new DebugCamera(1280, 720);
+	isDebugCameraActive_ = false;
 
 	wt_.Initialize();
 	vp_.Initialize();
-}
 
+	AxisIndicator::SetVisible(true);
+	AxisIndicator::SetTargetViewProjection(&vp_);
+}
 
 void GameScene::Update() {
 
@@ -38,12 +41,30 @@ void GameScene::Update() {
 
 	// デバッグテキストの出力----------------------------------
 #ifdef _DEBUG
+
+	// SPACEでデバッグカメラの有効化
+	if (input_->TriggerKey(DIK_SPACE)) {
+		isDebugCameraActive_ != true ? isDebugCameraActive_ = true : isDebugCameraActive_ = false;
+	}
+
+	// デバッグカメラが有効かどうかでvpを変更する
+	if (isDebugCameraActive_) {
+		dc_->Update();
+		vp_.matProjection = dc_->GetViewProjection().matProjection;
+		vp_.matView = dc_->GetViewProjection().matView;
+		vp_.TransferMatrix();
+
+	} else {
+		vp_.UpdateMatrix();
+	}
+
 	ImGui::Begin("Player");
 	ImGui::InputFloat3("playerPos", &player_->GetWorldTransform().translation_.x);
 	ImGui::SliderFloat3("playerPoss", &player_->GetWorldTransform().translation_.x, 0.0f, 1.0f);
+	ImGui::Checkbox("isDebugCameraActive(key [SPACE] to change)", &isDebugCameraActive_);
 	ImGui::End();
-#endif // DEBUG
 
+#endif // DEBUG
 }
 
 void GameScene::Draw() {

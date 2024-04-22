@@ -61,6 +61,9 @@
     <Filter Include="ソース ファイル\math\Func">
       <UniqueIdentifier>{d932a3bc-4b4f-40f6-9f32-9a77cb94db1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="config">
+      <UniqueIdentifier>{c1b9b500-9242-4de6-99d9-bf01b9ec9a31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -190,6 +193,9 @@
     </ClInclude>
     <ClInclude Include="Matrix2x2.h">
       <Filter>ヘッダー ファイル\math</Filter>
+    </ClInclude>
+    <ClInclude Include="environment.h">
+      <Filter>config</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

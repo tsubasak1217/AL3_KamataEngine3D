@@ -52,6 +52,7 @@ private: // メンバ変数
 
 	// デバックカメラ
 	DebugCamera* dc_ = nullptr;
+	bool isDebugCameraActive_;
 
 	// 3d描画のための変数
 	WorldTransform wt_;

@@ -8,12 +8,13 @@ GameScene::GameScene() {}
 
 GameScene::~GameScene() {
 	delete sprite_;
+	delete dc_;
 	delete player_;
 }
 
 void GameScene::Initialize() {
 
-	player_ = new Player;
+	player_ = new Player();
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
@@ -21,7 +22,7 @@ void GameScene::Initialize() {
 
 	// テクスチャの読み込み
 	textureHandle_ = TextureManager::Load("uvChecker.png");
-	sprite_ = Sprite::Create(textureHandle_, {100, 50});
+	sprite_ = Sprite::Create(textureHandle_, Vector2(100, 50));
 	player_->SetModel(Model::Create());
 
 	// デバックカメラ
@@ -43,7 +44,7 @@ void GameScene::Update() {
 #ifdef _DEBUG
 
 	// SPACEでデバッグカメラの有効化
-	if (input_->TriggerKey(DIK_SPACE)) {
+	if (input_->TriggerKey(DIK_RETURN)) {
 		isDebugCameraActive_ != true ? isDebugCameraActive_ = true : isDebugCameraActive_ = false;
 	}
 
@@ -61,7 +62,7 @@ void GameScene::Update() {
 	ImGui::Begin("Player");
 	ImGui::InputFloat3("playerPos", &player_->GetWorldTransform().translation_.x);
 	ImGui::SliderFloat3("playerPoss", &player_->GetWorldTransform().translation_.x, 0.0f, 1.0f);
-	ImGui::Checkbox("isDebugCameraActive(key [SPACE] to change)", &isDebugCameraActive_);
+	ImGui::Checkbox("isDebugCameraActive(key [ENTER] to change)", &isDebugCameraActive_);
 	ImGui::End();
 
 #endif // DEBUG
@@ -93,7 +94,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	player_->GetModel()->Draw(player_->GetWorldTransform(), vp_, textureHandle_); // モデルの描画
+	player_->Draw(vp_); // モデルの描画
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

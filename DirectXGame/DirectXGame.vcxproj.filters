@@ -90,6 +90,15 @@
     <ClCompile Include="math\Func\Easing.cpp">
       <Filter>ソース ファイル\math\Func</Filter>
     </ClCompile>
+    <ClCompile Include="3d\WorldTransform.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="game\Bullet.cpp">
+      <Filter>ソース ファイル\game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3d\ViewProjection.h">
@@ -196,6 +205,9 @@
     </ClInclude>
     <ClInclude Include="environment.h">
       <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="game\Bullet.h">
+      <Filter>ヘッダー ファイル\game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

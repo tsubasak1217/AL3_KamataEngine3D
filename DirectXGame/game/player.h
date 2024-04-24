@@ -1,47 +1,32 @@
-﻿#include "Model.h"
-#include "WorldTransform.h"
+﻿#include "Input.h"
+#include "Model.h"
 #include "ViewProjection.h"
-#include "Input.h"
+#include "WorldTransform.h"
+#include "Object.h"
+#include "Bullet.h"
 
-class Player {
+class Player : public Object {
 
 public:
 	// コンストラクタ.デストラクタ
 	Player();
 	~Player();
 
-	// 初期化
-	void Init();
-
-	// 更新
-	void Update();
-
-	// 描画
-	void Draw();
+	void Init() override;
+	void Update() override;
+	void Draw(const ViewProjection& vp) override;
 
 private:
 
-	// 入力
 	Input* input_ = nullptr;
+	std::vector<Bullet*> bullets_;
 
-	// 半径
-	float radius_ = 64.0f;
-	// 拡縮・回転・移動に関する変数
-	Vector3 scale_;
-	Vector3 rotate_;
-	Vector3 moveVec_;
-	float moveSpeed_;
-
-	// ワールド変換データ
-	WorldTransform wt_;
-
-	// モデル
-	Model* model_ = nullptr;
-	// テクスチャハンドル
-	uint32_t GH_ = 0u;
+private: // メンバ関数
+	void Shoot();
+	void Rotate();
+	void Move();
 
 public:
-
 	Model* GetModel() { return model_; }
 	void SetModel(Model* model) { model_ = model; }
 

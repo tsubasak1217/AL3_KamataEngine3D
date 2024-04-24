@@ -4,6 +4,9 @@
 /// 3次元ベクトル
 /// </summary>
 struct Vector3 final {
+
+	public:
+
 	float x = 0;
 	float y = 0;
 	float z = 0;
@@ -92,8 +95,9 @@ struct Vector3 final {
 		z *= obj;
 	}
 	// DEVIDE---------------------------------
-	Vector3 operator/(float obj) const { return {x / obj, y / obj, z / obj}; }
-	Vector3 operator/(const Vector3& obj) const { return {x / obj.x, y / obj.y, z / obj.z}; }
+	Vector3 operator/(float obj) const { return Vector3(x / obj, y / obj, z / obj); }
+	Vector3 operator/(const Vector3& obj) const { return Vector3(x / obj.x, y / obj.y, z / obj.z);}
+
 	void operator/=(float obj) {
 		x = x / obj;
 		y = y / obj;

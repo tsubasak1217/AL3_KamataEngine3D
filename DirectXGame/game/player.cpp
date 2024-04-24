@@ -11,9 +11,9 @@ Player::Player() { Init(); }
 Player::~Player() {
 	delete model_;
 	model_ = nullptr;
-	for (int i = 0; i < bullets_.size(); i++) {
-		delete bullets_[i];
-		bullets_[i] = nullptr;
+	for (Bullet* bullet : bullets_) {
+		delete bullet;
+		bullet = nullptr;
 	}
 }
 
@@ -36,23 +36,21 @@ void Player::Update() {
 	Shoot();
 
 	// 移動量の決定
-	Move();
+	Translate();
 
-	// 回転
+	// 回転量の決定
 	Rotate();
 
-	for (int i = 0; i < bullets_.size(); i++) {
-		bullets_[i]->Update();
+	// 一定時間経過した弾の削除
+	std::erase_if(bullets_, [](Bullet* bullet) { return !(bullet->GetIsAlive()); });
+
+	// 弾の更新
+	for (Bullet* bullet : bullets_) {
+		bullet->Update();
 	}
 
-	// 移動ベクトルの加算
-	wt_.scale_ = scale_;
-	wt_.translation_ += moveVec_;
-	wt_.rotation_ = rotate_;
-
-	// 移動制限
-	wt_.translation_.x = std::clamp(wt_.translation_.x, -33.0f, 33.0f);
-	wt_.translation_.y = std::clamp(wt_.translation_.y, -18.0f, 18.0f);
+	// 実際に移動
+	Move();
 
 	// ワールド行列の作成
 	wt_.UpdateMatrix();
@@ -62,31 +60,30 @@ void Player::Draw(const ViewProjection& vp) {
 
 	model_->Draw(wt_, vp, GH_);
 
-	for (int i = 0; i < bullets_.size(); i++) {
-		bullets_[i]->Draw(vp);
+	for (Bullet* bullet : bullets_) {
+		bullet->Draw(vp);
 	}
 }
 
 void Player::Shoot() {
 
 	if (input_->TriggerKey(DIK_SPACE)) {
-
-		bullets_.push_back(new Bullet(wt_.translation_));
+		bullets_.push_back(new Bullet(wt_.translation_,wt_.rotation_));
 	}
 }
 
 void Player::Rotate() {
 
 	if (input_->PushKey(DIK_A)) {
-		rotate_.y += std::sin((1.0f / 128.0f) * PI);
+		rotate_.y -= std::sin((1.0f / 128.0f) * PI);
 	}
 
 	if (input_->PushKey(DIK_D)) {
-		rotate_.y -= std::sin((1.0f / 128.0f) * PI);
+		rotate_.y += std::sin((1.0f / 128.0f) * PI);
 	}
 }
 
-void Player::Move() {
+void Player::Translate() {
 
 	// 移動量の初期化
 	moveVec_ = {0.0f, 0.0f, 0.0f};
@@ -108,4 +105,16 @@ void Player::Move() {
 	if (input_->PushKey(DIK_DOWN)) {
 		moveVec_.y -= moveSpeed_;
 	}
+}
+
+void Player::Move() {
+
+	// 移動ベクトルの加算
+	wt_.scale_ = scale_;
+	wt_.translation_ += moveVec_;
+	wt_.rotation_ = rotate_;
+
+	// 移動制限
+	wt_.translation_.x = std::clamp(wt_.translation_.x, -33.0f, 33.0f);
+	wt_.translation_.y = std::clamp(wt_.translation_.y, -18.0f, 18.0f);
 }

@@ -101,6 +101,7 @@ Matrix4x4 Subtract(const Matrix4x4& matrix1, const Matrix4x4& matrix2);
 // ---------------積を求める----------------
 Vector2 Multiply(const Vector2& vector, const Matrix2x2& matrix);
 Vector2 Multiply(const Vector2& vector, const Matrix3x3& matrix);
+Vector3 Multiply(const Vector3& vector, const Matrix4x4& matrix);
 Matrix2x2 Multiply(const Matrix2x2& matrix1, const Matrix2x2& matrix2);
 Matrix3x3 Multiply(const Matrix3x3& matrix1, const Matrix3x3& matrix2);
 Matrix4x4 Multiply(const Matrix4x4& matrix1, const Matrix4x4& matrix2);

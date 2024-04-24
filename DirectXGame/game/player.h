@@ -19,11 +19,12 @@ public:
 private:
 
 	Input* input_ = nullptr;
-	std::vector<Bullet*> bullets_;
+	std::list<Bullet*> bullets_;
 
 private: // メンバ関数
 	void Shoot();
 	void Rotate();
+	void Translate();
 	void Move();
 
 public:

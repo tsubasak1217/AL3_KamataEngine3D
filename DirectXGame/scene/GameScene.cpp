@@ -8,8 +8,12 @@ GameScene::GameScene() {}
 
 GameScene::~GameScene() {
 	delete sprite_;
+	sprite_ = nullptr;
 	delete dc_;
+	dc_ = nullptr;
 	delete player_;
+	player_ = nullptr;
+	//delete audio_;
 }
 
 void GameScene::Initialize() {

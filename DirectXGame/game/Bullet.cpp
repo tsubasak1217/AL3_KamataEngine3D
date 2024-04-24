@@ -30,4 +30,7 @@ void Bullet::Update() {
 void Bullet::Draw(const ViewProjection& vp) { 
 	model_->Draw(wt_, vp, GH_); }
 
-void Bullet::Fin() { delete model_; }
+void Bullet::Fin() { 
+	delete model_;
+	model_ = nullptr;
+}

@@ -111,11 +111,11 @@
     <ClCompile Include="base\DirectXCommon.cpp" />
     <ClCompile Include="base\WinApp.cpp" />
     <ClCompile Include="game\Bullet.cpp" />
+    <ClCompile Include="game\Object.cpp" />
     <ClCompile Include="game\player.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math\Func\Easing.cpp" />
     <ClCompile Include="math\Func\MyFunc.cpp" />
-    <ClCompile Include="Object.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -144,6 +144,7 @@
     <ClInclude Include="base\WinApp.h" />
     <ClInclude Include="environment.h" />
     <ClInclude Include="game\Bullet.h" />
+    <ClInclude Include="game\Object.h" />
     <ClInclude Include="game\player.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="math\Func\Easing.h" />

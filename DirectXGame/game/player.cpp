@@ -10,8 +10,10 @@ Player::Player() { Init(); }
 
 Player::~Player() {
 	delete model_;
+	model_ = nullptr;
 	for (int i = 0; i < bullets_.size(); i++) {
 		delete bullets_[i];
+		bullets_[i] = nullptr;
 	}
 }
 

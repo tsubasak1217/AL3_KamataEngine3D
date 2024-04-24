@@ -142,19 +142,19 @@
     <ClInclude Include="base\StringUtility.h" />
     <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\WinApp.h" />
-    <ClInclude Include="environment.h" />
+    <ClInclude Include="config\environment.h" />
     <ClInclude Include="game\Bullet.h" />
     <ClInclude Include="game\Object.h" />
     <ClInclude Include="game\player.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="math\Func\Easing.h" />
     <ClInclude Include="math\Func\MyFunc.h" />
+    <ClInclude Include="math\Matrix2x2.h" />
+    <ClInclude Include="math\Matrix3x3.h" />
     <ClInclude Include="math\Matrix4x4.h" />
     <ClInclude Include="math\Vector2.h" />
     <ClInclude Include="math\Vector3.h" />
     <ClInclude Include="math\Vector4.h" />
-    <ClInclude Include="Matrix2x2.h" />
-    <ClInclude Include="Matrix3x3.h" />
     <ClInclude Include="scene\GameScene.h" />
   </ItemGroup>
   <ItemGroup>

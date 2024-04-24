@@ -13,7 +13,6 @@ GameScene::~GameScene() {
 	dc_ = nullptr;
 	delete player_;
 	player_ = nullptr;
-	//delete audio_;
 }
 
 void GameScene::Initialize() {

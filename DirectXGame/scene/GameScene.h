@@ -10,6 +10,7 @@
 #include "DebugCamera.h"
 #include "AxisIndicator.h"
 #include "player.h"
+#include "Enemy.h"
 
 /// <summary>
 /// ゲームシーン
@@ -49,6 +50,9 @@ private: // メンバ変数
 
 	// プレイヤー
 	Player* player_ = nullptr;
+
+	// 敵
+	Enemy* enemy_ = nullptr;
 
 	// デバックカメラ
 	DebugCamera* dc_ = nullptr;

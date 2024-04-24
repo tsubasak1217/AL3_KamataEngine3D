@@ -11,6 +11,8 @@ GameScene::~GameScene() {
 	sprite_ = nullptr;
 	delete dc_;
 	dc_ = nullptr;
+	delete enemy_;
+	enemy_ = nullptr;
 	delete player_;
 	player_ = nullptr;
 }
@@ -18,6 +20,7 @@ GameScene::~GameScene() {
 void GameScene::Initialize() {
 
 	player_ = new Player();
+	enemy_ = new Enemy();
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
@@ -27,6 +30,7 @@ void GameScene::Initialize() {
 	textureHandle_ = TextureManager::Load("uvChecker.png");
 	sprite_ = Sprite::Create(textureHandle_, Vector2(100, 50));
 	player_->SetModel(Model::Create());
+	enemy_->SetModel(Model::Create());
 
 	// デバックカメラ
 	dc_ = new DebugCamera(1280, 720);
@@ -42,6 +46,7 @@ void GameScene::Initialize() {
 void GameScene::Update() {
 
 	player_->Update();
+	enemy_->Update();
 
 	// デバッグテキストの出力----------------------------------
 #ifdef _DEBUG
@@ -62,9 +67,9 @@ void GameScene::Update() {
 		vp_.UpdateMatrix();
 	}
 
-	ImGui::Begin("Player");
-	ImGui::InputFloat3("playerPos", &player_->GetWorldTransform().translation_.x);
-	ImGui::SliderFloat3("playerPoss", &player_->GetWorldTransform().translation_.x, 0.0f, 1.0f);
+	ImGui::Begin("Enemy");
+	ImGui::InputFloat3("enemyPos", &enemy_->GetWorldTransform().translation_.x);
+	ImGui::SliderFloat3("enemyPos", &enemy_->GetWorldTransform().translation_.x, 0.0f, 1.0f);
 	ImGui::Checkbox("isDebugCameraActive(key [ENTER] to change)", &isDebugCameraActive_);
 	ImGui::End();
 
@@ -98,6 +103,7 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	player_->Draw(vp_); // モデルの描画
+	enemy_->Draw(vp_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

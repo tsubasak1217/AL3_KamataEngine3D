@@ -5,6 +5,11 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 
+enum ACTION {
+	APPROACH,
+	EXIT
+};
+
 class Enemy : public Object {
 
 public:
@@ -18,6 +23,7 @@ public:
 
 private:
 	std::list<Bullet*> bullets_;
+	int action_;
 
 private: // メンバ関数
 	void Shoot();

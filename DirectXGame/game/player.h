@@ -19,7 +19,7 @@ public:
 private:
 
 	Input* input_ = nullptr;
-	std::list<Bullet*> bullets_;
+	std::list<std::unique_ptr<Bullet>> bullets_;
 
 private: // メンバ関数
 	void Shoot();
@@ -28,8 +28,4 @@ private: // メンバ関数
 	void Move();
 
 public:
-	Model* GetModel() { return model_; }
-	void SetModel(Model* model) { model_ = model; }
-
-	WorldTransform& GetWorldTransform() { return wt_; }
 };

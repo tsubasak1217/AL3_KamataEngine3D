@@ -7,7 +7,7 @@
 
 class Bullet : public Object {
 public:
-	Bullet(Vector3 pos,Vector3 rotate);
+	Bullet(const Vector3& pos,const Vector3& rotate,const Vector3& moveVec);
 	~Bullet();
 	void Init() override;
 	void Update() override;
@@ -19,6 +19,5 @@ private:
 	int32_t deathTimer_;
 
 public:
-	void SetModel(Model* model) { model_ = model; }
 	bool GetIsAlive() { return deathTimer_ > 0; }
 };

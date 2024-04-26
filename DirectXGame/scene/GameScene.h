@@ -1,16 +1,16 @@
 #pragma once
 
 #include "Audio.h"
+#include "AxisIndicator.h"
+#include "DebugCamera.h"
 #include "DirectXCommon.h"
+#include "Enemy.h"
 #include "Input.h"
 #include "Model.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "DebugCamera.h"
-#include "AxisIndicator.h"
 #include "player.h"
-#include "Enemy.h"
 
 /// <summary>
 /// ゲームシーン
@@ -68,7 +68,6 @@ private: // メンバ変数
 
 	// imgui
 	float inputFloat[3] = {0.0f, 0.0f, 0.0f};
-
 
 	/// <summary>
 	/// ゲームシーン用

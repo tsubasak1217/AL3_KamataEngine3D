@@ -1,18 +1,19 @@
 ﻿#include "Bullet.h"
 #include "MyFunc.h"
 
-Bullet::Bullet(Vector3 pos, Vector3 rotate) {
+Bullet::Bullet(const Vector3& pos, const Vector3& rotate, const Vector3& moveVec) {
 	Init();
 	wt_.Initialize();
 	wt_.translation_ = pos;
 	wt_.rotation_ = rotate;
-	moveVec_ = Multiply(moveVec_, RotateMatrix(rotate));
+	moveVec_ = Normalize(moveVec);
 }
 
 Bullet::~Bullet() { Fin(); }
 
 void Bullet::Init() {
-	model_ = Model::Create();
+	//model_ = std::make_unique<Model>();
+	model_.reset(Model::Create());
 	scale_ = {1.0f, 1.0f, 1.0f};
 	rotate_ = {0.0f, 0.0f, 0.0f};
 	moveVec_ = {0.0f, 0.0f, 1.0f};
@@ -38,6 +39,5 @@ void Bullet::Update() {
 void Bullet::Draw(const ViewProjection& vp) { model_->Draw(wt_, vp, GH_); }
 
 void Bullet::Fin() {
-	delete model_;
-	model_ = nullptr;
+	model_.reset();
 }

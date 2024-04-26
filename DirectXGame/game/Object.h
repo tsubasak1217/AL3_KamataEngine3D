@@ -1,38 +1,43 @@
 ﻿#pragma once
-#include "Vector3.h"
 #include "Model.h"
-#include "WorldTransform.h"
 #include "TextureManager.h"
+#include "Vector3.h"
+#include "WorldTransform.h"
 
 class Object {
 
-	public:
-		Object();
-	    ~Object();
-	    virtual void Init();
-		virtual void Update();
-	    virtual void Draw(const ViewProjection& vp);
-	    virtual void Fin();
+public:
+	Object();
+	~Object();
+	virtual void Init();
+	virtual void Update();
+	virtual void Draw(const ViewProjection& vp);
+	virtual void Fin();
 
-	protected:
-		//
-	    Vector3 pos_;
+protected:
+	//
+	Vector3 pos_;
 
-		//
-	    float radius_;
-	    float moveSpeed_;
-	    Vector3 moveVec_;
+	//
+	float radius_;
+	float moveSpeed_;
+	Vector3 moveVec_;
 
-		//
-	    Vector3 scale_;
-	    Vector3 rotate_;
-	    Vector3 translate_;
+	//
+	Vector3 scale_;
+	Vector3 rotate_;
+	Vector3 translate_;
 
-		//
-	    Model* model_ = nullptr;
-	    WorldTransform wt_;
+	//
+	std::unique_ptr<Model> model_ = nullptr;
+	WorldTransform wt_;
 
-		//
-	    int GH_;
+	//
+	int GH_;
 
+public:
+
+	WorldTransform& GetWorldTransform() { return wt_; }
+	Model* GetModel() { return model_.get(); }
+	void SetModel(Model* model) { model_.reset(model); }
 };

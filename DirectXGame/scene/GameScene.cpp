@@ -21,6 +21,7 @@ void GameScene::Initialize() {
 
 	player_ = new Player();
 	enemy_ = new Enemy();
+	enemy_->SetPlayerPtr(player_);
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();

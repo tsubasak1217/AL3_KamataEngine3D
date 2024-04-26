@@ -5,6 +5,8 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 
+class Player;
+
 enum ACTION {
 	APPROACH,
 	EXIT
@@ -22,18 +24,18 @@ public:
 	void Draw(const ViewProjection& vp) override;
 
 private:
-	std::list<Bullet*> bullets_;
+	std::list<std::unique_ptr<Bullet>> bullets_;
+	Player* playerPtr_ = nullptr;
 	int action_;
+	int frameCount_;
 
 private: // メンバ関数
-	void Shoot();
+	void UpdateBullet();
 	void Rotate();
 	void Translate();
 	void Move();
 
 public:
-	Model* GetModel() { return model_; }
-	void SetModel(Model* model) { model_ = model; }
-
+	void SetPlayerPtr(Player* playerPtr) { playerPtr_ = playerPtr; }
 	WorldTransform& GetWorldTransform() { return wt_; }
 };

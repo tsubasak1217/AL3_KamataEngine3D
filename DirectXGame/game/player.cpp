@@ -30,6 +30,7 @@ void Player::Init() {
 	moveVec_ = { 0.0f, 0.0f, 0.0f };
 	moveSpeed_ = 0.2f;
 	GH_ = TextureManager::Load("uvChecker.png");
+
 }
 
 void Player::Update() {

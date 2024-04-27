@@ -114,6 +114,7 @@
     <ClCompile Include="game\Enemy.cpp" />
     <ClCompile Include="game\Object.cpp" />
     <ClCompile Include="game\player.cpp" />
+    <ClCompile Include="game\skydome.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math\Func\Easing.cpp" />
     <ClCompile Include="math\Func\MyFunc.cpp" />
@@ -148,6 +149,7 @@
     <ClInclude Include="game\Enemy.h" />
     <ClInclude Include="game\Object.h" />
     <ClInclude Include="game\player.h" />
+    <ClInclude Include="game\skydome.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="math\Func\Easing.h" />
     <ClInclude Include="math\Func\MyFunc.h" />

@@ -4,13 +4,14 @@
 #include "AxisIndicator.h"
 #include "DebugCamera.h"
 #include "DirectXCommon.h"
-#include "Enemy.h"
 #include "Input.h"
 #include "Model.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "player.h"
+#include "Enemy.h"
+#include "skydome.h"
 
 /// <summary>
 /// ゲームシーン
@@ -47,6 +48,9 @@ private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
+
+	// 天球
+	std::unique_ptr<Skydome>skydome_;
 
 	// プレイヤー
 	Player* player_ = nullptr;

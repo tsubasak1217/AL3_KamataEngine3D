@@ -16,6 +16,7 @@ GameScene::~GameScene() {
 	enemy_ = nullptr;
 	delete player_;
 	player_ = nullptr;
+	skydome_.reset();
 }
 
 void GameScene::Initialize() {
@@ -23,6 +24,7 @@ void GameScene::Initialize() {
 	player_ = new Player();
 	enemy_ = new Enemy();
 	enemy_->SetPlayerPtr(player_);
+	skydome_.reset(new Skydome());
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
@@ -49,6 +51,7 @@ void GameScene::Update() {
 
 	player_->Update();
 	enemy_->Update();
+	skydome_->Update();
 
 	CheckCollision();
 
@@ -106,7 +109,8 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	player_->Draw(vp_); // モデルの描画
+	skydome_->Draw(vp_);// モデルの描画
+	player_->Draw(vp_);
 	enemy_->Draw(vp_);
 
 	// 3Dオブジェクト描画後処理

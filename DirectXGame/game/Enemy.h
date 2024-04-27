@@ -36,6 +36,10 @@ private: // メンバ関数
 	void Move();
 
 public:
+	void OnCollision();
+
+public:
 	void SetPlayerPtr(Player* playerPtr) { playerPtr_ = playerPtr; }
 	WorldTransform& GetWorldTransform() { return wt_; }
+	const std::list<std::unique_ptr<Bullet>>& GetBullets(){ return bullets_; }
 };

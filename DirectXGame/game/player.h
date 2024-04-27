@@ -28,4 +28,8 @@ private: // メンバ関数
 	void Move();
 
 public:
+	void OnCollision();
+
+public:
+	const std::list<std::unique_ptr<Bullet>>& GetBullets(){ return bullets_; }
 };

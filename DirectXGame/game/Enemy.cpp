@@ -22,11 +22,12 @@ void Enemy::Init() {
 
 	model_ = std::make_unique<Model>();
 	wt_.Initialize();
+	radius_ = 2.0f;
 	scale_ = { 1.0f, 1.0f, 1.0f };
 	rotate_ = { 0.0f, PI, 0.0f };
 	moveVec_ = { 0.0f, 0.0f, -1.0f };
 	wt_.translation_ = { 4.0f, 1.5f, 20.0f };
-	moveSpeed_ = 0.2f;
+	moveSpeed_ = 0.1f;
 	action_ = APPROACH;
 	frameCount_ = 0;
 	GH_ = TextureManager::Load("symmetryORE_STRONG.jpg");
@@ -116,4 +117,8 @@ void Enemy::Move() {
 	wt_.scale_ = scale_;
 	wt_.translation_ += moveVec_ * moveSpeed_;
 	wt_.rotation_ = rotate_;
+}
+
+void Enemy::OnCollision()
+{
 }

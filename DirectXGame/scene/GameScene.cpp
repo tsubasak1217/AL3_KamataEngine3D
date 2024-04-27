@@ -3,6 +3,7 @@
 #include "PrimitiveDrawer.h"
 #include "TextureManager.h"
 #include <cassert>
+#include "MyFunc.h"
 
 GameScene::GameScene() {}
 
@@ -48,6 +49,8 @@ void GameScene::Update() {
 
 	player_->Update();
 	enemy_->Update();
+
+	CheckCollision();
 
 	// デバッグテキストの出力----------------------------------
 #ifdef _DEBUG
@@ -125,4 +128,48 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
+}
+
+void GameScene::CheckCollision(){
+
+	// 敵弾と自分
+	for(auto& bullet : enemy_->GetBullets()){
+		float distance = Length(
+			player_->GetWorldTransform().translation_ - 
+			bullet->GetWorldTransform().translation_
+		);
+
+		if(distance <= player_->GetRadius() + bullet->GetRadius()){
+			player_->OnCollision();
+			bullet->OnCollision();
+		}
+	}
+
+	// 自弾と敵
+	for(auto& bullet : player_->GetBullets()){
+		float distance = Length(
+			enemy_->GetWorldTransform().translation_ -
+			bullet->GetWorldTransform().translation_
+		);
+
+		if(distance <= enemy_->GetRadius() + bullet->GetRadius()){
+			enemy_->OnCollision();
+			bullet->OnCollision();
+		}
+	}
+
+	// 自弾と敵弾
+	for(auto& playerBullet : player_->GetBullets()){
+		for(auto& enemyBullet : enemy_->GetBullets()){
+			float distance = Length(
+				playerBullet->GetWorldTransform().translation_ -
+				enemyBullet->GetWorldTransform().translation_
+			);
+
+			if(distance <= playerBullet->GetRadius() + enemyBullet->GetRadius()){
+				playerBullet->OnCollision();
+				enemyBullet->OnCollision();
+			}
+		}
+	}
 }

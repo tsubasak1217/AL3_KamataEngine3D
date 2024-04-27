@@ -25,6 +25,7 @@ void Player::Init() {
 	input_ = Input::GetInstance();
 	model_ = std::make_unique<Model>();
 	wt_.Initialize();
+	radius_ = 2.0f;
 	scale_ = { 1.0f, 1.0f, 1.0f };
 	rotate_ = { 0.0f, 0.0f, 0.0f };
 	moveVec_ = { 0.0f, 0.0f, 0.0f };
@@ -126,4 +127,8 @@ void Player::Move() {
 	// 移動制限
 	wt_.translation_.x = std::clamp(wt_.translation_.x, -33.0f, 33.0f);
 	wt_.translation_.y = std::clamp(wt_.translation_.y, -18.0f, 18.0f);
+}
+
+void Player::OnCollision()
+{
 }

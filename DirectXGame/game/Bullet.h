@@ -19,5 +19,8 @@ private:
 	int32_t deathTimer_;
 
 public:
+	void OnCollision();
+
+public:
 	bool GetIsAlive() { return deathTimer_ > 0; }
 };

@@ -40,4 +40,5 @@ public:
 	WorldTransform& GetWorldTransform() { return wt_; }
 	Model* GetModel() { return model_.get(); }
 	void SetModel(Model* model) { model_.reset(model); }
+	float GetRadius()const{ return radius_; }
 };

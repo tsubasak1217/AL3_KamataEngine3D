@@ -69,6 +69,9 @@ private: // メンバ変数
 	// imgui
 	float inputFloat[3] = {0.0f, 0.0f, 0.0f};
 
+private:
+	void CheckCollision();
+
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

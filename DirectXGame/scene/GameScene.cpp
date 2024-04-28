@@ -58,7 +58,7 @@ void GameScene::Update() {
 	// デバッグテキストの出力----------------------------------
 #ifdef _DEBUG
 
-	// SPACEでデバッグカメラの有効化
+	// ENTERでデバッグカメラの有効化
 	if (input_->TriggerKey(DIK_RETURN)) {
 		isDebugCameraActive_ != true ? isDebugCameraActive_ = true : isDebugCameraActive_ = false;
 	}

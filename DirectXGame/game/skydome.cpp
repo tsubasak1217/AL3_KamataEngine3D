@@ -11,7 +11,7 @@ Skydome::~Skydome(){
 
 void Skydome::Init(){
 	wt_.Initialize();
-	wt_.scale_ = { 100.0f,100.0f,100.0f };
+	wt_.scale_ = { 500.0f,500.0f,500.0f };
 	wt_.rotation_ = { 0.0f,0.0f,0.0f };
 	wt_.translation_ = { 0.0f,0.0f,0.0f };
 	wt_.UpdateMatrix();

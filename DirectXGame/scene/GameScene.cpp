@@ -12,6 +12,7 @@ GameScene::~GameScene() {
 	sprite_ = nullptr;
 	delete dc_;
 	dc_ = nullptr;
+	railCamera_.reset();
 	delete enemy_;
 	enemy_ = nullptr;
 	delete player_;
@@ -21,9 +22,15 @@ GameScene::~GameScene() {
 
 void GameScene::Initialize() {
 
+	// レールカメラ
+	railCamera_.reset(new RailCamera({0.0f,0.0f,0.0f}, {0.0f,0.0f,0.0f}));
+	// プレイヤー
 	player_ = new Player();
+	player_->SetParentPtr(railCamera_->GetWorldTransform());// レールカメラに追従するよう親子関係を持たせる
+	// 敵
 	enemy_ = new Enemy();
 	enemy_->SetPlayerPtr(player_);
+	// 天球
 	skydome_.reset(new Skydome());
 
 	dxCommon_ = DirectXCommon::GetInstance();
@@ -40,15 +47,19 @@ void GameScene::Initialize() {
 	dc_ = new DebugCamera(1280, 720);
 	isDebugCameraActive_ = false;
 
+
 	wt_.Initialize();
-	vp_.Initialize();
 
 	AxisIndicator::SetVisible(true);
-	AxisIndicator::SetTargetViewProjection(&vp_);
+	AxisIndicator::SetTargetViewProjection(railCamera_->GetViewProjection());
 }
 
 void GameScene::Update() {
 
+	// カメラの更新
+	railCamera_->Update();
+
+	// オブジェクトの更新
 	player_->Update();
 	enemy_->Update();
 	skydome_->Update();
@@ -66,12 +77,12 @@ void GameScene::Update() {
 	// デバッグカメラが有効かどうかでvpを変更する
 	if (isDebugCameraActive_) {
 		dc_->Update();
-		vp_.matProjection = dc_->GetViewProjection().matProjection;
-		vp_.matView = dc_->GetViewProjection().matView;
-		vp_.TransferMatrix();
+		railCamera_->GetViewProjection()->matProjection = dc_->GetViewProjection().matProjection;
+		railCamera_->GetViewProjection()->matView = dc_->GetViewProjection().matView;
+		railCamera_->GetViewProjection()->TransferMatrix();
 
 	} else {
-		vp_.UpdateMatrix();
+		//railCamera_->GetViewProjection()->UpdateMatrix();
 	}
 
 	ImGui::Begin("Enemy");
@@ -109,9 +120,10 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	skydome_->Draw(vp_);// モデルの描画
-	player_->Draw(vp_);
-	enemy_->Draw(vp_);
+	
+	skydome_->Draw(*railCamera_->GetViewProjection());// モデルの描画
+	player_->Draw(*railCamera_->GetViewProjection());
+	enemy_->Draw(*railCamera_->GetViewProjection());
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -139,7 +151,7 @@ void GameScene::CheckCollision(){
 	// 敵弾と自分
 	for(auto& bullet : enemy_->GetBullets()){
 		float distance = Length(
-			player_->GetWorldTransform().translation_ - 
+			(player_->GetWorldTransform().translation_ + player_->GetWorldTransform().parent_->translation_) -
 			bullet->GetWorldTransform().translation_
 		);
 
@@ -153,7 +165,7 @@ void GameScene::CheckCollision(){
 	for(auto& bullet : player_->GetBullets()){
 		float distance = Length(
 			enemy_->GetWorldTransform().translation_ -
-			bullet->GetWorldTransform().translation_
+			(bullet->GetWorldTransform().translation_ + bullet->GetWorldTransform().parent_->translation_)
 		);
 
 		if(distance <= enemy_->GetRadius() + bullet->GetRadius()){
@@ -166,7 +178,7 @@ void GameScene::CheckCollision(){
 	for(auto& playerBullet : player_->GetBullets()){
 		for(auto& enemyBullet : enemy_->GetBullets()){
 			float distance = Length(
-				playerBullet->GetWorldTransform().translation_ -
+				(playerBullet->GetWorldTransform().translation_ + playerBullet->GetWorldTransform().parent_->translation_) -
 				enemyBullet->GetWorldTransform().translation_
 			);
 

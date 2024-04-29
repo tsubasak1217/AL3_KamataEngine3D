@@ -25,6 +25,7 @@ void Player::Init() {
 	input_ = Input::GetInstance();
 	model_ = std::make_unique<Model>();
 	wt_.Initialize();
+	wt_.translation_ = { 0.0f,0.0f,20.0f };
 	radius_ = 2.0f;
 	scale_ = { 1.0f, 1.0f, 1.0f };
 	rotate_ = { 0.0f, 0.0f, 0.0f };
@@ -79,6 +80,9 @@ void Player::Shoot() {
 				Multiply({ 0.0f, 0.0f, 1.0f }, RotateMatrix(wt_.rotation_))
 			)
 		);
+
+
+		bullets_.back()->SetParentPtr(wt_.parent_);// レールカメラに追従するよう親子関係を持たせる
 	}
 }
 

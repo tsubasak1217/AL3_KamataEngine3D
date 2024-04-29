@@ -76,7 +76,8 @@ void Enemy::UpdateBullet() {
 			bullets_.push_back(std::make_unique<Bullet>(
 				wt_.translation_,// 初期座標
 				wt_.rotation_,// 初期回転値
-				playerPtr_->GetWorldTransform().translation_ - wt_.translation_// 動くベクトル
+				(playerPtr_->GetWorldTransform().translation_ + playerPtr_->GetWorldTransform().parent_->translation_)
+				- wt_.translation_// 動くベクトル
 			));
 		}
 

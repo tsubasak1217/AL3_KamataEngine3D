@@ -4,6 +4,7 @@
 #include "WorldTransform.h"
 #include "Object.h"
 #include "Bullet.h"
+#include "railCamera.h"
 
 class Player : public Object {
 

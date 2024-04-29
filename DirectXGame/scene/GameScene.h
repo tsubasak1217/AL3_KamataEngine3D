@@ -12,6 +12,7 @@
 #include "player.h"
 #include "Enemy.h"
 #include "skydome.h"
+#include "railCamera.h"
 
 /// <summary>
 /// ゲームシーン
@@ -58,13 +59,14 @@ private: // メンバ変数
 	// 敵
 	Enemy* enemy_ = nullptr;
 
-	// デバックカメラ
+	// カメラ
 	DebugCamera* dc_ = nullptr;
+	std::unique_ptr<RailCamera> railCamera_;
 	bool isDebugCameraActive_;
 
 	// 3d描画のための変数
 	WorldTransform wt_;
-	ViewProjection vp_;
+	//ViewProjection vp_;
 
 	// テクスチャ
 	uint32_t textureHandle_;

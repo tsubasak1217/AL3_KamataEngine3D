@@ -41,4 +41,5 @@ public:
 	Model* GetModel() { return model_.get(); }
 	void SetModel(Model* model) { model_.reset(model); }
 	float GetRadius()const{ return radius_; }
+	void SetParentPtr(const WorldTransform* parentWt){ wt_.parent_ = parentWt; }
 };

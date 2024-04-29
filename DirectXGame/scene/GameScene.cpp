@@ -148,11 +148,16 @@ void GameScene::Draw() {
 
 void GameScene::CheckCollision(){
 
+	Vector3 playerPos =
+		Multiply(
+			player_->GetWorldTransform().translation_,
+			RotateMatrix(player_->GetWorldTransform().parent_->rotation_))
+		+ player_->GetWorldTransform().parent_->translation_;
+
 	// 敵弾と自分
 	for(auto& bullet : enemy_->GetBullets()){
 		float distance = Length(
-			(player_->GetWorldTransform().translation_ + player_->GetWorldTransform().parent_->translation_) -
-			bullet->GetWorldTransform().translation_
+			playerPos - bullet->GetWorldTransform().translation_
 		);
 
 		if(distance <= player_->GetRadius() + bullet->GetRadius()){
@@ -165,7 +170,7 @@ void GameScene::CheckCollision(){
 	for(auto& bullet : player_->GetBullets()){
 		float distance = Length(
 			enemy_->GetWorldTransform().translation_ -
-			(bullet->GetWorldTransform().translation_ + bullet->GetWorldTransform().parent_->translation_)
+			bullet->GetWorldTransform().translation_
 		);
 
 		if(distance <= enemy_->GetRadius() + bullet->GetRadius()){
@@ -178,7 +183,7 @@ void GameScene::CheckCollision(){
 	for(auto& playerBullet : player_->GetBullets()){
 		for(auto& enemyBullet : enemy_->GetBullets()){
 			float distance = Length(
-				(playerBullet->GetWorldTransform().translation_ + playerBullet->GetWorldTransform().parent_->translation_) -
+				playerBullet->GetWorldTransform().translation_ -
 				enemyBullet->GetWorldTransform().translation_
 			);
 

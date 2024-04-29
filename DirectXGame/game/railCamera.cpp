@@ -21,7 +21,7 @@ void RailCamera::Init(Vector3 pos, Vector3 rotate)
 
 	moveVec_ = {0.0f,0.0f,-1.0f};
 	moveSpeed_ = 0.125f; 
-	rotate_ = {0.0f,0.0f,0.0f};
+	rotate_ = {0.0f,float(M_PI) * 0.001f,0.0f};
 }
 
 void RailCamera::Update()

@@ -75,14 +75,11 @@ void Player::Shoot() {
 	if(input_->TriggerKey(DIK_SPACE)) {
 		bullets_.push_back(
 			std::make_unique<Bullet>(
-				wt_.translation_,
-				wt_.rotation_,
-				Multiply({ 0.0f, 0.0f, 1.0f }, RotateMatrix(wt_.rotation_))
+				Multiply(wt_.translation_, RotateMatrix(wt_.parent_->rotation_)) + wt_.parent_->translation_,// 初期位置
+				wt_.rotation_,// 初期回転量
+				Multiply({ 0.0f, 0.0f, 1.0f }, RotateMatrix(wt_.rotation_ + wt_.parent_->rotation_))// 発射ベクトル
 			)
 		);
-
-
-		bullets_.back()->SetParentPtr(wt_.parent_);// レールカメラに追従するよう親子関係を持たせる
 	}
 }
 

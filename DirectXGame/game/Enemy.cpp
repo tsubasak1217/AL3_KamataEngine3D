@@ -5,22 +5,23 @@
 #include <cmath>
 #include <environment.h>
 #include <numbers>
+#include "GameScene.h"
+
 const float PI = std::numbers::pi_v<float>;
 
-Enemy::Enemy() { Init(); }
+Enemy::Enemy(Vector3 emitPos) { 
+	Init();
+	wt_.translation_ = emitPos;
+}
 
 Enemy::~Enemy() {
-	model_.reset();
-
-	for(auto& bullet : bullets_) {
-		bullet.reset();
-	}
-	bullets_.clear();
+	delete model_;
+	model_ = nullptr;
 }
 
 void Enemy::Init() {
 
-	model_ = std::make_unique<Model>();
+	model_ = new Model();
 	wt_.Initialize();
 	radius_ = 2.0f;
 	scale_ = { 1.0f, 1.0f, 1.0f };
@@ -29,6 +30,7 @@ void Enemy::Init() {
 	wt_.translation_ = { 4.0f, 1.5f, 20.0f };
 	moveSpeed_ = 0.1f;
 	action_ = APPROACH;
+	isAlive_ = true;
 	frameCount_ = 0;
 	GH_ = TextureManager::Load("symmetryORE_STRONG.jpg");
 }
@@ -57,10 +59,6 @@ void Enemy::Update() {
 void Enemy::Draw(const ViewProjection& vp) {
 
 	model_->Draw(wt_, vp, GH_);
-
-	for(auto& bullet : bullets_) {
-		bullet->Draw(vp);
-	}
 }
 
 void Enemy::UpdateBullet() {
@@ -68,12 +66,9 @@ void Enemy::UpdateBullet() {
 	switch(action_) {
 	case APPROACH:
 
-		// 一定時間経過した弾の削除
-		std::erase_if(bullets_, [](auto& bullet) { return !(bullet->GetIsAlive()); });
-
 		// 一定時間ごとに弾を発射
-		if(frameCount_ % 30 == 0) {
-			bullets_.push_back(std::make_unique<Bullet>(
+		if(frameCount_ % 60 == 0) {
+			gameScenePtr_->AddEnemyBullet(new Bullet(
 				wt_.translation_,// 初期座標
 				wt_.rotation_,// 初期回転値
 				/*-----------------この長いの、プレイヤーの座標----------------*/
@@ -84,11 +79,6 @@ void Enemy::UpdateBullet() {
 				/*--------------------------------------------------------*/
 				- wt_.translation_// プレイヤーの座標から自身の座標を引き、動くベクトルを算出
 			));
-		}
-
-		// 弾の更新
-		for(auto& bullet : bullets_) {
-			bullet->Update();
 		}
 
 		break;
@@ -127,4 +117,5 @@ void Enemy::Move() {
 
 void Enemy::OnCollision()
 {
+	isAlive_ = false;
 }

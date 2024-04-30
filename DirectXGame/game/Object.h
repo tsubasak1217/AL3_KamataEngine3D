@@ -29,7 +29,7 @@ protected:
 	Vector3 translate_;
 
 	//
-	std::unique_ptr<Model> model_ = nullptr;
+	Model* model_ = nullptr;
 	WorldTransform wt_;
 
 	//
@@ -38,8 +38,8 @@ protected:
 public:
 
 	WorldTransform& GetWorldTransform() { return wt_; }
-	Model* GetModel() { return model_.get(); }
-	void SetModel(Model* model) { model_.reset(model); }
+	Model* GetModel() { return model_; }
+	void SetModel(Model* model) { model_ = model; }
 	float GetRadius()const{ return radius_; }
 	void SetParentPtr(const WorldTransform* parentWt){ wt_.parent_ = parentWt; }
 };

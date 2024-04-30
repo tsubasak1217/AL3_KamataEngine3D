@@ -5,6 +5,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 
+class GameScene;
 class Player;
 
 enum ACTION {
@@ -16,7 +17,7 @@ class Enemy : public Object {
 
 public:
 	// コンストラクタ.デストラクタ
-	Enemy();
+	Enemy(Vector3 emitPos);
 	~Enemy();
 
 	void Init() override;
@@ -24,10 +25,11 @@ public:
 	void Draw(const ViewProjection& vp) override;
 
 private:
-	std::list<std::unique_ptr<Bullet>> bullets_;
 	Player* playerPtr_ = nullptr;
+	GameScene* gameScenePtr_ = nullptr;
 	int action_;
 	int frameCount_;
+	bool isAlive_;
 
 private: // メンバ関数
 	void UpdateBullet();
@@ -40,6 +42,9 @@ public:
 
 public:
 	void SetPlayerPtr(Player* playerPtr) { playerPtr_ = playerPtr; }
+	void SetGameScenePtr(GameScene* gameScenePtr) { gameScenePtr_ = gameScenePtr; }
 	WorldTransform& GetWorldTransform() { return wt_; }
-	const std::list<std::unique_ptr<Bullet>>& GetBullets(){ return bullets_; }
+
+	void SetIsAlive(bool flag){ isAlive_ = flag; }
+	bool GetIsAlive()const{ return isAlive_; }
 };

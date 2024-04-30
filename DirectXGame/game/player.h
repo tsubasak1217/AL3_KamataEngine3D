@@ -6,6 +6,8 @@
 #include "Bullet.h"
 #include "railCamera.h"
 
+class GameScene;
+
 class Player : public Object {
 
 public:
@@ -20,7 +22,7 @@ public:
 private:
 
 	Input* input_ = nullptr;
-	std::list<std::unique_ptr<Bullet>> bullets_;
+	GameScene* gameScenePtr_;
 
 private: // メンバ関数
 	void Shoot();
@@ -30,7 +32,5 @@ private: // メンバ関数
 
 public:
 	void OnCollision();
-
-public:
-	const std::list<std::unique_ptr<Bullet>>& GetBullets(){ return bullets_; }
+	void SetGameScenePtr(GameScene* gameScenePtr){ gameScenePtr_ = gameScenePtr; }
 };

@@ -2,7 +2,10 @@
 
 Object::Object() {}
 
-Object::~Object() {}
+Object::~Object() {
+	delete model_;
+	model_ = nullptr;
+}
 
 void Object::Init() {}
 

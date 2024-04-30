@@ -1,6 +1,10 @@
 ﻿#include "Bullet.h"
 #include "MyFunc.h"
 
+Bullet::Bullet()
+{
+}
+
 Bullet::Bullet(const Vector3& pos, const Vector3& rotate, const Vector3& moveVec) {
 	Init();
 	wt_.Initialize();
@@ -12,7 +16,7 @@ Bullet::Bullet(const Vector3& pos, const Vector3& rotate, const Vector3& moveVec
 Bullet::~Bullet() { Fin(); }
 
 void Bullet::Init() {
-	model_.reset(Model::Create());
+	model_ = Model::Create();
 	radius_ = 2.0f;
 	scale_ = {1.0f, 1.0f, 1.0f};
 	rotate_ = {0.0f, 0.0f, 0.0f};
@@ -39,7 +43,8 @@ void Bullet::Update() {
 void Bullet::Draw(const ViewProjection& vp) { model_->Draw(wt_, vp, GH_); }
 
 void Bullet::Fin() {
-	model_.reset();
+	delete model_;
+	model_ = nullptr;
 }
 
 void Bullet::OnCollision(){

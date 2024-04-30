@@ -1,5 +1,5 @@
 #pragma once
-
+#include <sstream>
 #include "Audio.h"
 #include "AxisIndicator.h"
 #include "DebugCamera.h"
@@ -9,10 +9,12 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "player.h"
-#include "Enemy.h"
 #include "skydome.h"
 #include "railCamera.h"
+#include "Bullet.h"
+
+class Player;
+class Enemy;
 
 /// <summary>
 /// ゲームシーン
@@ -57,7 +59,11 @@ private: // メンバ変数
 	Player* player_ = nullptr;
 
 	// 敵
-	Enemy* enemy_ = nullptr;
+	std::list<std::unique_ptr<Enemy>> enemy_;
+
+	// 弾
+	std::list<std::unique_ptr<Bullet>> enemyBullets_;
+	std::list<std::unique_ptr<Bullet>> playerBullets_;
 
 	// カメラ
 	DebugCamera* dc_ = nullptr;
@@ -75,8 +81,19 @@ private: // メンバ変数
 	// imgui
 	float inputFloat[3] = {0.0f, 0.0f, 0.0f};
 
+	// 敵の行動コマンド
+	std::stringstream enemyCommands_;
+	bool isWait_;
+	int32_t waitTimer_;
+
 private:
 	void CheckCollision();
+	void LoadEnemyCommands(std::string filePath);
+	void UpdateEnemyCommands();
+
+public:
+	void AddEnemyBullet(Bullet* bullet);
+	void AddPlayerBullet(Bullet* bullet);
 
 	/// <summary>
 	/// ゲームシーン用

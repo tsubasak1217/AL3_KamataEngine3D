@@ -7,6 +7,7 @@
 
 class Bullet : public Object {
 public:
+	Bullet();
 	Bullet(const Vector3& pos,const Vector3& rotate,const Vector3& moveVec);
 	~Bullet();
 	void Init() override;
@@ -22,5 +23,5 @@ public:
 	void OnCollision();
 
 public:
-	bool GetIsAlive() { return deathTimer_ > 0; }
+	const bool GetIsAlive()const { return deathTimer_ > 0; }
 };

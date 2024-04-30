@@ -4,6 +4,7 @@
 #include <cmath>
 #include <environment.h>
 #include <numbers>
+#include "GameScene.h"
 const float PI = std::numbers::pi_v<float>;
 
 Player::Player() {
@@ -11,19 +12,14 @@ Player::Player() {
 }
 
 Player::~Player() {
-
-	model_.reset();
-
-	for(auto& bullet : bullets_) {
-		bullet.reset();
-	}
-	bullets_.clear();
+	delete model_;
+	model_ = nullptr;
 }
 
 void Player::Init() {
 
 	input_ = Input::GetInstance();
-	model_ = std::make_unique<Model>();
+	model_ = new Model();
 	wt_.Initialize();
 	wt_.translation_ = { 0.0f,0.0f,20.0f };
 	radius_ = 2.0f;
@@ -46,14 +42,6 @@ void Player::Update() {
 	// 回転量の決定
 	Rotate();
 
-	// 一定時間経過した弾の削除
-	std::erase_if(bullets_, [](auto& bullet) { return !(bullet->GetIsAlive()); });
-
-	// 弾の更新
-	for(auto& bullet : bullets_) {
-		bullet->Update();
-	}
-
 	// 実際に移動
 	Move();
 
@@ -64,17 +52,12 @@ void Player::Update() {
 void Player::Draw(const ViewProjection& vp) {
 
 	model_->Draw(wt_, vp, GH_);
-
-	for(auto& bullet : bullets_) {
-		bullet->Draw(vp);
-	}
 }
 
 void Player::Shoot() {
 
 	if(input_->TriggerKey(DIK_SPACE)) {
-		bullets_.push_back(
-			std::make_unique<Bullet>(
+		gameScenePtr_->AddPlayerBullet(new Bullet(
 				Multiply(wt_.translation_, RotateMatrix(wt_.parent_->rotation_)) + wt_.parent_->translation_,// 初期位置
 				wt_.rotation_,// 初期回転量
 				Multiply({ 0.0f, 0.0f, 1.0f }, RotateMatrix(wt_.rotation_ + wt_.parent_->rotation_))// 発射ベクトル

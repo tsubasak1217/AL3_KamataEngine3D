@@ -53,9 +53,14 @@ void GameScene::Initialize() {
 	LoadEnemyCommands("Resources/enemyAction.csv");
 	isWait_ = false;
 	waitTimer_ = 0;
-
+	
+	//
 	wt_.Initialize();
 
+	// レティクルのテクスチャを先に読み込む
+	TextureManager::Load("lockOn.png");
+
+	//
 	AxisIndicator::SetVisible(true);
 	AxisIndicator::SetTargetViewProjection(railCamera_->GetViewProjection());
 }
@@ -161,6 +166,8 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	///
+
+	player_->DrawReticle(*railCamera_->GetViewProjection());
 
 	/// </summary>
 

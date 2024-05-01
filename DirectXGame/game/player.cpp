@@ -14,14 +14,29 @@ Player::Player() {
 Player::~Player() {
 	delete model_;
 	model_ = nullptr;
+	delete reticleSprite_;
+	reticleSprite_ = nullptr;
 }
 
 void Player::Init() {
 
 	input_ = Input::GetInstance();
 	model_ = new Model();
+
 	wt_.Initialize();
 	wt_.translation_ = { 0.0f,0.0f,20.0f };
+
+	// レティクルの初期化
+	reticleVec_ = Normalize({ 0.0f,0.0f,1.0f });
+	reticleDistance_ = 10.0f;
+	reticleWt_.Initialize();
+	reticleWt_.translation_ =
+		wt_.translation_ + Multiply(reticleVec_,RotateMatrix(wt_.rotation_)) * reticleDistance_;
+	reticleWt_.parent_ = &wt_;
+	reticleTexture_ = TextureManager::Load("lockOn.png");
+	reticleSprite_ = Sprite::Create(reticleTexture_, { 0.0f,0.0f }, { 0xff,0xff,0xff,0xff }, { 0.5f,0.5f });
+
+	//
 	radius_ = 2.0f;
 	scale_ = { 1.0f, 1.0f, 1.0f };
 	rotate_ = { 0.0f, 0.0f, 0.0f };
@@ -47,11 +62,34 @@ void Player::Update() {
 
 	// ワールド行列の作成
 	wt_.UpdateMatrix();
+	reticleWt_.UpdateMatrix();
 }
 
 void Player::Draw(const ViewProjection& vp) {
 
 	model_->Draw(wt_, vp, GH_);
+}
+
+// レティクルの描画
+void Player::DrawReticle(const ViewProjection& vp)
+{
+	Vector3 reticlePosition2D;
+	Matrix4x4 result;
+	result = Multiply(reticleWt_.matWorld_, vp.matView);
+	result = Multiply(result, vp.matProjection);
+	result = Multiply(result, ViewportMatrix(kWindowSize, { 0.0f,0.0f }, 0.0f, 1000.0f));
+	reticlePosition2D = Transform(Multiply(reticleVec_, RotateMatrix(wt_.rotation_)) * reticleDistance_, result);
+
+	reticleSprite_ = Sprite::Create(
+		reticleTexture_,
+		{ reticlePosition2D.x,reticlePosition2D.y },
+		{ 0xff,0xff,0xff,0xff },
+		{ 0.5f,0.5f }
+	);
+	
+	reticleSprite_->SetSize(reticleSprite_->GetSize() * 0.25f);
+
+	reticleSprite_->Draw();
 }
 
 void Player::Shoot() {
@@ -111,6 +149,14 @@ void Player::Move() {
 	// 移動制限
 	wt_.translation_.x = std::clamp(wt_.translation_.x, -33.0f, 33.0f);
 	wt_.translation_.y = std::clamp(wt_.translation_.y, -18.0f, 18.0f);
+
+	// プレイヤーに合わせてレティクルも移動
+	reticleWt_.translation_ = reticleVec_ * reticleDistance_;
+}
+
+void Player::UpdateReticle()
+{
+
 }
 
 void Player::OnCollision()

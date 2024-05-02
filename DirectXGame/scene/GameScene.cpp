@@ -85,7 +85,7 @@ void GameScene::Update() {
 	}
 
 	// オブジェクトの更新
-	player_->Update();
+	player_->Update(*railCamera_->GetViewProjection());
 	for(auto& enemy : enemy_){ enemy->Update(); }
 	skydome_->Update();
 
@@ -167,7 +167,7 @@ void GameScene::Draw() {
 	/// ここに前景スプライトの描画処理を追加できる
 	///
 
-	player_->DrawReticle(*railCamera_->GetViewProjection());
+	player_->DrawReticle();
 
 	/// </summary>
 

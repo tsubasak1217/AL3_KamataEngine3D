@@ -17,9 +17,9 @@ public:
 	~Player();
 
 	void Init() override;
-	void Update() override;
+	void Update(const ViewProjection& vp);
 	void Draw(const ViewProjection& vp) override;
-	void DrawReticle(const ViewProjection& vp);
+	void DrawReticle();
 
 private:
 
@@ -32,8 +32,10 @@ private:
 	uint32_t reticleTexture_;
 	Sprite* reticleSprite_ = nullptr;
 
+	uint32_t frameCount_;
+
 private: // メンバ関数
-	void Shoot();
+	void Shoot(const ViewProjection& vp);
 	void Rotate();
 	void Translate();
 	void Move();

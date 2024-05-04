@@ -28,11 +28,12 @@ private:
 	
 	WorldTransform reticleWt_;
 	Vector3 reticleVec_;
+	Vector2 screenReticlePos_;
 	float reticleDistance_;
 	uint32_t reticleTexture_;
 	Sprite* reticleSprite_ = nullptr;
 
-	uint32_t frameCount_;
+	uint32_t shootColltime_;
 
 private: // メンバ関数
 	void Shoot(const ViewProjection& vp);

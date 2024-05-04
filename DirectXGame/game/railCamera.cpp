@@ -19,7 +19,7 @@ void RailCamera::Init(Vector3 pos, Vector3 rotate)
 	wt_.rotation_ = rotate;
 	vp_.Initialize();
 
-	moveVec_ = {0.0f,0.0f,-1.0f};
+	moveVec_ = {0.0f,0.0f,1.0f};
 	moveSpeed_ = 0.125f; 
 	rotate_ = {0.0f,0.0f,0.0f};
 }

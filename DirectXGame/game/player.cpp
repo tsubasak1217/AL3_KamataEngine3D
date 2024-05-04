@@ -28,6 +28,7 @@ void Player::Init() {
 
 	// レティクルの初期化
 	reticleVec_ = Normalize({ 0.0f,0.0f,1.0f });
+	screenReticlePos_ = kWindowSize * 0.5f;
 	reticleDistance_ = 30.0f;
 	reticleWt_.Initialize();
 	reticleWt_.translation_ =
@@ -45,12 +46,10 @@ void Player::Init() {
 	moveSpeed_ = 0.2f;
 	GH_ = TextureManager::Load("uvChecker.png");
 
-	frameCount_ = 0;
+	shootColltime_ = 0;
 }
 
 void Player::Update(const ViewProjection& vp) {
-
-	frameCount_++;
 
 	// 弾の発射
 	Shoot(vp);
@@ -77,26 +76,29 @@ void Player::Draw(const ViewProjection& vp) {
 // レティクルの描画
 void Player::DrawReticle()
 {
-	// マウス座標を取得
-	POINT mousePos;
-	GetCursorPos(&mousePos);
-	// マウス座標をウィンドウ左上基準に合わせる
-	HWND hwnd = WinApp::GetInstance()->GetHwnd();
-	ScreenToClient(hwnd, &mousePos);
 
-	reticleSprite_->SetPosition(Vector2(float(mousePos.x), float(mousePos.y)));
+	// レティクルをジョイスティックで移動
+	XINPUT_STATE joyState;
+	if(Input::GetInstance()->GetJoystickState(0, joyState)){
+		screenReticlePos_.x += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * 6.0f;
+		screenReticlePos_.y -= (float)joyState.Gamepad.sThumbRY / SHRT_MAX * 6.0f;
+	}
 
+	// 範囲内に収める
+	screenReticlePos_.x = std::clamp(screenReticlePos_.x, 0.0f, kWindowSize.x);
+	screenReticlePos_.y = std::clamp(screenReticlePos_.y, 0.0f, kWindowSize.y);
+
+	// 座標を更新して描画
+	reticleSprite_->SetPosition(Vector2(screenReticlePos_.x, screenReticlePos_.y));
 	reticleSprite_->Draw();
 }
 
 void Player::Shoot(const ViewProjection& vp) {
 
-	// マウス座標を取得
-	POINT mousePos;
-	GetCursorPos(&mousePos);
-	// マウス座標をウィンドウ左上基準に合わせる
-	HWND hwnd = WinApp::GetInstance()->GetHwnd();
-	ScreenToClient(hwnd, &mousePos);
+	// 発射クールタイムの更新
+	if(shootColltime_ > 0){
+		shootColltime_--;
+	}
 
 	/*------------------------------------------*/
 	//			nearZ,farZ面上のワールド座標を計算
@@ -107,8 +109,8 @@ void Player::Shoot(const ViewProjection& vp) {
 	matVPV = Multiply(matVPV, ViewportMatrix(kWindowSize, { 0.0f,0.0f, }, 0.0f, 1000.0f));
 	Matrix4x4 inverseVPV = InverseMatrix(matVPV);
 
-	Vector3 nearPos = { float(mousePos.x),float(mousePos.y),0.0f };
-	Vector3 farPos = { float(mousePos.x),float(mousePos.y),1.0f };
+	Vector3 nearPos = { screenReticlePos_.x,screenReticlePos_.y,0.0f };
+	Vector3 farPos = { screenReticlePos_.x,screenReticlePos_.y,1.0f };
 
 	// ワールド座標へ
 	nearPos = Transform(nearPos, inverseVPV);
@@ -124,14 +126,21 @@ void Player::Shoot(const ViewProjection& vp) {
 	/*------------------------------------------*/
 	//					発射
 	/*------------------------------------------*/
+	XINPUT_STATE joyState;
 
-	if(frameCount_ % 5 == 0) {
-		gameScenePtr_->AddPlayerBullet(new Bullet(
-			Multiply(wt_.translation_, RotateMatrix(wt_.parent_->rotation_)) + wt_.parent_->translation_,// 初期位置
-			wt_.rotation_,// 初期回転量
-			Normalize(reticleWorldPos - wt_.translation_)// 発射ベクトル
-		)
-		);
+	if(!Input::GetInstance()->GetJoystickState(0, joyState)){ return; }
+
+	if(joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER){
+		if(shootColltime_ <= 0) {
+			gameScenePtr_->AddPlayerBullet(new Bullet(
+				Multiply(wt_.translation_, RotateMatrix(wt_.parent_->rotation_)) + wt_.parent_->translation_,// 初期位置
+				wt_.rotation_,// 初期回転量
+				Normalize(reticleWorldPos - wt_.translation_)// 発射ベクトル
+			)
+			);
+
+			shootColltime_ = 5;
+		}
 	}
 }
 
@@ -151,22 +160,12 @@ void Player::Translate() {
 	// 移動量の初期化
 	moveVec_ = { 0.0f, 0.0f, 0.0f };
 
-	// X軸の移動量決定
-	if(input_->PushKey(DIK_LEFT)) {
-		moveVec_.x -= moveSpeed_;
-	}
+	//
+	XINPUT_STATE joyState;
 
-	if(input_->PushKey(DIK_RIGHT)) {
-		moveVec_.x += moveSpeed_;
-	}
-
-	// Y軸の移動量決定
-	if(input_->PushKey(DIK_UP)) {
-		moveVec_.y += moveSpeed_;
-	}
-
-	if(input_->PushKey(DIK_DOWN)) {
-		moveVec_.y -= moveSpeed_;
+	if(Input::GetInstance()->GetJoystickState(0, joyState)){
+		moveVec_.x = (float)joyState.Gamepad.sThumbLX / SHRT_MAX * moveSpeed_;
+		moveVec_.y = (float)joyState.Gamepad.sThumbLY / SHRT_MAX * moveSpeed_;
 	}
 }
 

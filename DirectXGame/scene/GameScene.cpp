@@ -32,6 +32,7 @@ void GameScene::Initialize() {
 	player_ = new Player();
 	player_->SetParentPtr(railCamera_->GetWorldTransform());// レールカメラに追従するよう親子関係を持たせる
 	player_->SetGameScenePtr(this);// ゲームシーンのポインタを持たせる
+	player_->SetCameraPtr(railCamera_.get());
 
 	// 天球
 	skydome_.reset(new Skydome());

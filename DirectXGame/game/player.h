@@ -35,6 +35,8 @@ private:
 
 	uint32_t shootColltime_;
 
+	RailCamera* railcamera_ = nullptr;
+
 private: // メンバ関数
 	void Shoot(const ViewProjection& vp);
 	void Rotate();
@@ -45,4 +47,5 @@ private: // メンバ関数
 public:
 	void OnCollision();
 	void SetGameScenePtr(GameScene* gameScenePtr){ gameScenePtr_ = gameScenePtr; }
+	void SetCameraPtr(RailCamera* railcamera){ railcamera_ = railcamera; }
 };

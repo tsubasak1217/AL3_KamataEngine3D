@@ -5,6 +5,8 @@
 #include <environment.h>
 #include <numbers>
 #include "GameScene.h"
+#include <ImGui.h>
+
 const float PI = std::numbers::pi_v<float>;
 
 Player::Player() {
@@ -121,7 +123,10 @@ void Player::Shoot(const ViewProjection& vp) {
 	//		　レティクルのワールド座標Z分だけ掛ける
 	/*------------------------------------------*/
 
-	Vector3 reticleWorldPos = Normalize(farPos - nearPos) * (wt_.translation_.z + reticleDistance_);
+	Vector3 wpos = Multiply(wt_.translation_, RotateMatrix(wt_.parent_->rotation_)) + wt_.parent_->translation_;
+	Vector3 rWPos = nearPos + Normalize(farPos - nearPos) * reticleDistance_;
+	//Vector3 reticleWorldPos = Normalize(farPos - nearPos) * (wt_.translation_.z + reticleDistance_);
+	//reticleWorldPos = Multiply(reticleWorldPos, Multiply(wt_.matWorld_, wt_.parent_->matWorld_));
 
 	/*------------------------------------------*/
 	//					発射
@@ -135,13 +140,22 @@ void Player::Shoot(const ViewProjection& vp) {
 			gameScenePtr_->AddPlayerBullet(new Bullet(
 				Multiply(wt_.translation_, RotateMatrix(wt_.parent_->rotation_)) + wt_.parent_->translation_,// 初期位置
 				wt_.rotation_,// 初期回転量
-				Normalize(reticleWorldPos - wt_.translation_)// 発射ベクトル
+				Normalize(rWPos - wpos)// 発射ベクトル
 			)
 			);
 
 			shootColltime_ = 5;
 		}
 	}
+
+
+	ImGui::Begin("iroiro");
+
+	ImGui::DragFloat3("reticlePos", &rWPos.x, 1.0f);
+	ImGui::DragFloat3("playerTranslate", &wpos.x, 1.0f);
+
+
+	ImGui::End();
 }
 
 void Player::Rotate() {
@@ -177,8 +191,8 @@ void Player::Move() {
 	wt_.rotation_ = rotate_;
 
 	// 移動制限
-	wt_.translation_.x = std::clamp(wt_.translation_.x, -33.0f, 33.0f);
-	wt_.translation_.y = std::clamp(wt_.translation_.y, -18.0f, 18.0f);
+	wt_.translation_.x = std::clamp(wt_.translation_.x, -10.0f, 10.0f);
+	wt_.translation_.y = std::clamp(wt_.translation_.y, -6.0f, 6.0f);
 
 	// プレイヤーに合わせてレティクルも移動
 	reticleWt_.translation_ = reticleVec_ * reticleDistance_;

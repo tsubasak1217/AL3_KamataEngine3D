@@ -27,7 +27,7 @@ void Enemy::Init() {
 	moveVec_ = { 0.0f, 0.0f, -1.0f };
 	wt_.translation_ = { 4.0f, 1.5f, 20.0f };
 	moveSpeed_ = 0.2f;
-	action_ = APPROACH;
+	action_ = (size_t)ACTION::APPROACH;
 	frameCount_ = 0;
 	GH_ = TextureManager::Load("symmetryORE_STRONG.jpg");
 }
@@ -35,6 +35,9 @@ void Enemy::Init() {
 void Enemy::Update() {
 
 	frameCount_++;
+
+	// 敵のアクションに応じた関数処理
+	(this->*pMenberFunc[action_])();
 
 	// 弾の更新
 	UpdateBullet();
@@ -64,51 +67,15 @@ void Enemy::Draw(const ViewProjection& vp) {
 
 void Enemy::UpdateBullet() {
 
-	switch(action_) {
-	case APPROACH:
-
-		// 一定時間経過した弾の削除
-		std::erase_if(bullets_, [](auto& bullet) { return !(bullet->GetIsAlive()); });
-
-		// 一定時間ごとに弾を発射
-		if(frameCount_ % 30 == 0) {
-			bullets_.push_back(std::make_unique<Bullet>(
-				wt_.translation_,// 初期座標
-				wt_.rotation_,// 初期回転値
-				playerPtr_->GetWorldTransform().translation_ - wt_.translation_// 動くベクトル
-			));
-		}
-
-		// 弾の更新
-		for(auto& bullet : bullets_) {
-			bullet->Update();
-		}
-
-		break;
-
-	case EXIT:
-		break;
-
-	default:
-		break;
+	// 弾の更新
+	for(auto& bullet : bullets_) {
+		bullet->Update();
 	}
 }
 
 void Enemy::Rotate() {}
 
-void Enemy::Translate() {
-	switch(action_) {
-	case APPROACH:
-
-		break;
-
-	case EXIT:
-		break;
-
-	default:
-		break;
-	}
-}
+void Enemy::Translate() {}
 
 void Enemy::Move() {
 
@@ -117,3 +84,34 @@ void Enemy::Move() {
 	wt_.translation_ += moveVec_ * moveSpeed_;
 	wt_.rotation_ = rotate_;
 }
+
+void Enemy::Approach()
+{
+	// 一定時間経過した弾の削除
+	std::erase_if(bullets_, [](auto& bullet) { return !(bullet->GetIsAlive()); });
+
+	// 一定時間ごとに弾を発射
+	if(frameCount_ % 30 == 0) {
+		bullets_.push_back(std::make_unique<Bullet>(
+			wt_.translation_,// 初期座標
+			wt_.rotation_,// 初期回転値
+			playerPtr_->GetWorldTransform().translation_ - wt_.translation_// 動くベクトル
+		));
+	}
+
+	// 遷移
+	if(wt_.translation_.z < 0.0f){
+		moveVec_ = { -1.0f,1.0f,0.0f };
+		action_ = (size_t)ACTION::EXIT;
+	}
+}
+
+void Enemy::Exit()
+{
+}
+
+// メンバ関数テーブル
+void (Enemy::*Enemy::pMenberFunc[])() = {
+	&Enemy::Approach,
+	&Enemy::Exit
+};

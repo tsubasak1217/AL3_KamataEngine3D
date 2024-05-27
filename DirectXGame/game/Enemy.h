@@ -7,7 +7,7 @@
 
 class Player;
 
-enum ACTION {
+enum class ACTION {
 	APPROACH,
 	EXIT
 };
@@ -26,14 +26,22 @@ public:
 private:
 	std::list<std::unique_ptr<Bullet>> bullets_;
 	Player* playerPtr_ = nullptr;
-	int action_;
+	size_t action_;
 	int frameCount_;
+	float velocity_;
 
 private: // メンバ関数
 	void UpdateBullet();
 	void Rotate();
 	void Translate();
 	void Move();
+
+	// アクションごとの関数
+	void Approach();
+	void Exit();
+
+	// メンバ関数テーブル
+	static void (Enemy::*pMenberFunc[])();
 
 public:
 	void SetPlayerPtr(Player* playerPtr) { playerPtr_ = playerPtr; }

@@ -36,7 +36,6 @@ protected:
 	int GH_;
 
 public:
-
 	WorldTransform& GetWorldTransform() { return wt_; }
 	Model* GetModel() { return model_; }
 	void SetModel(Model* model) { model_ = model; }

@@ -112,6 +112,7 @@
     <ClCompile Include="base\WinApp.cpp" />
     <ClCompile Include="game\Bullet.cpp" />
     <ClCompile Include="game\Enemy.cpp" />
+    <ClCompile Include="game\EnemyState.cpp" />
     <ClCompile Include="game\Object.cpp" />
     <ClCompile Include="game\player.cpp" />
     <ClCompile Include="game\railCamera.cpp" />
@@ -148,6 +149,7 @@
     <ClInclude Include="config\environment.h" />
     <ClInclude Include="game\Bullet.h" />
     <ClInclude Include="game\Enemy.h" />
+    <ClInclude Include="game\EnemyState.h" />
     <ClInclude Include="game\Object.h" />
     <ClInclude Include="game\player.h" />
     <ClInclude Include="game\railCamera.h" />

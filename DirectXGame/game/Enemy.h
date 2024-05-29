@@ -4,11 +4,12 @@
 #include "Object.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "EnemyState.h"
 
 class GameScene;
 class Player;
 
-enum ACTION {
+enum class ACTION {
 	APPROACH,
 	EXIT
 };
@@ -27,9 +28,12 @@ public:
 private:
 	Player* playerPtr_ = nullptr;
 	GameScene* gameScenePtr_ = nullptr;
-	int action_;
+	size_t action_;
 	int frameCount_;
 	bool isAlive_;
+
+private:
+	BaseEnemyState* state_;
 
 private: // メンバ関数
 	void UpdateBullet();
@@ -37,14 +41,26 @@ private: // メンバ関数
 	void Translate();
 	void Move();
 
-public:
-	void OnCollision();
+	/*void Approach();
+	void Exit();*/
+
+	//static void (Enemy::*pActionFunc[])();
 
 public:
+	void ChangeState(BaseEnemyState* newState);
+	void OnCollision();
+
+public:// アクセッサ
 	void SetPlayerPtr(Player* playerPtr) { playerPtr_ = playerPtr; }
+	Player* GetPlayerPtr()const{ return playerPtr_; }
+
 	void SetGameScenePtr(GameScene* gameScenePtr) { gameScenePtr_ = gameScenePtr; }
-	WorldTransform& GetWorldTransform() { return wt_; }
+	GameScene* GetGameScenePtr()const{ return gameScenePtr_; }
 
 	void SetIsAlive(bool flag){ isAlive_ = flag; }
 	bool GetIsAlive()const{ return isAlive_; }
+
+	int GetFrameCount()const{ return frameCount_; }
+
+	void SetMoveVec(const Vector3& moveVec){ moveVec_ = moveVec; }
 };

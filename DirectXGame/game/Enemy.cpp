@@ -31,7 +31,6 @@ void Enemy::Init() {
 	moveVec_ = { 0.0f, 0.0f, -1.0f };
 	wt_.translation_ = { 4.0f, 1.5f, 20.0f };
 	moveSpeed_ = 0.1f;
-	action_ = (size_t)ACTION::APPROACH;
 	state_ = new EnemyState_Approach(this);
 	isAlive_ = true;
 	frameCount_ = 0;
@@ -42,8 +41,7 @@ void Enemy::Update() {
 
 	frameCount_++;
 
-	//
-	/*(this->*pActionFunc[action_])();*/
+	// Stateに応じたアップデート
 	state_->Update();
 
 	// 弾の更新
@@ -83,33 +81,6 @@ void Enemy::Move() {
 	wt_.translation_ += moveVec_ * moveSpeed_;
 	wt_.rotation_ = rotate_;
 }
-
-//void Enemy::Approach()
-//{
-//	// 一定時間ごとに弾を発射
-//	if(frameCount_ % 60 == 0) {
-//		gameScenePtr_->AddEnemyBullet(new Bullet(
-//			wt_.translation_,// 初期座標
-//			wt_.rotation_,// 初期回転値
-//			/*-----------------この長いの、プレイヤーの座標----------------*/
-//			Multiply(
-//				playerPtr_->GetWorldTransform().translation_,
-//				RotateMatrix(playerPtr_->GetWorldTransform().parent_->rotation_))
-//			+ playerPtr_->GetWorldTransform().parent_->translation_
-//			/*--------------------------------------------------------*/
-//			- wt_.translation_// プレイヤーの座標から自身の座標を引き、動くベクトルを算出
-//		));
-//	}
-//}
-//
-//void Enemy::Exit()
-//{
-//}
-
-//void (Enemy::*Enemy::pActionFunc[])() = {
-//	&Enemy::Approach,
-//	&Enemy::Exit
-//};
 
 void Enemy::ChangeState(BaseEnemyState* newState)
 {

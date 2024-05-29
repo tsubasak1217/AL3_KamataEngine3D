@@ -35,6 +35,7 @@ void EnemyState_Approach::Update()
 		));
 	}
 	
+	// 条件を満たしたら動くベクトルを変更し状態遷移
 	if(pEnemy_->GetWorldTransform().translation_.z < 0.0f){
 		pEnemy_->SetMoveVec({ -1.0f,1.0f,0.0f });
 		pEnemy_->ChangeState(new EnemyState_Exit(pEnemy_));
@@ -43,7 +44,7 @@ void EnemyState_Approach::Update()
 
 /* ------------------------------- EXIT ---------------------------------- */
 
-EnemyState_Exit::EnemyState_Exit(Enemy* pEnemy) : BaseEnemyState("Approach", pEnemy){}
+EnemyState_Exit::EnemyState_Exit(Enemy* pEnemy) : BaseEnemyState("Exit", pEnemy){}
 
 EnemyState_Exit::~EnemyState_Exit()
 {

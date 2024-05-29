@@ -9,11 +9,6 @@
 class GameScene;
 class Player;
 
-enum class ACTION {
-	APPROACH,
-	EXIT
-};
-
 class Enemy : public Object {
 
 public:
@@ -28,7 +23,6 @@ public:
 private:
 	Player* playerPtr_ = nullptr;
 	GameScene* gameScenePtr_ = nullptr;
-	size_t action_;
 	int frameCount_;
 	bool isAlive_;
 
@@ -40,11 +34,6 @@ private: // メンバ関数
 	void Rotate();
 	void Translate();
 	void Move();
-
-	/*void Approach();
-	void Exit();*/
-
-	//static void (Enemy::*pActionFunc[])();
 
 public:
 	void ChangeState(BaseEnemyState* newState);

@@ -78,7 +78,7 @@ void Player::DrawReticle(const ViewProjection& vp)
 	result = Multiply(reticleWt_.matWorld_, vp.matView);
 	result = Multiply(result, vp.matProjection);
 	result = Multiply(result, ViewportMatrix(kWindowSize, { 0.0f,0.0f }, 0.0f, 1000.0f));
-	reticlePosition2D = Transform(Multiply(reticleVec_, RotateMatrix(wt_.rotation_)) * reticleDistance_, result);
+	reticlePosition2D = Multiply(Multiply(reticleVec_, RotateMatrix(wt_.rotation_)) * reticleDistance_, result);
 
 	reticleSprite_ = Sprite::Create(
 		reticleTexture_,

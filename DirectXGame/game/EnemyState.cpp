@@ -4,35 +4,30 @@
 #include "GameScene.h"
 #include "MyFunc.h"
 
-void BaseEnemyState::ShiftState(BaseEnemyState* nextState)
-{
+void BaseEnemyState::ShiftState(BaseEnemyState* nextState){
+
 	pEnemy_->ChangeState(nextState);
 }
 
 
 /* ----------------------------- APPROACH -------------------------------- */
 
-EnemyState_Approach::EnemyState_Approach(Enemy* pEnemy) : BaseEnemyState("Approach", pEnemy){}
+EnemyState_Approach::EnemyState_Approach(Enemy* pEnemy) : BaseEnemyState("Approach", pEnemy){
+	// 最初の一発をセット
+	std::function<void()>func = std::bind(&Enemy::AddBullet, pEnemy_);
+	pEnemy_->timedCalls_.push_back(
+		std::make_unique<TimedCall>(func, pEnemy->shotInterval_)
+	);
+}
 
-EnemyState_Approach::~EnemyState_Approach()
-{
+EnemyState_Approach::~EnemyState_Approach(){
 }
 
 void EnemyState_Approach::Update()
 {
 	// 一定時間ごとに弾を発射
-	if(pEnemy_->GetFrameCount() % 60 == 0) {
-		pEnemy_->GetGameScenePtr()->AddEnemyBullet(new Bullet(
-			pEnemy_->GetWorldTransform().translation_,// 初期座標
-			pEnemy_->GetWorldTransform().rotation_,// 初期回転値
-			/*-----------------この長いの、プレイヤーの座標----------------*/
-			Multiply(
-				pEnemy_->GetPlayerPtr()->GetWorldTransform().translation_,
-				RotateMatrix(pEnemy_->GetPlayerPtr()->GetWorldTransform().parent_->rotation_))
-			+ pEnemy_->GetPlayerPtr()->GetWorldTransform().parent_->translation_
-			/*--------------------------------------------------------*/
-			- pEnemy_->GetWorldTransform().translation_// プレイヤーの座標から自身の座標を引き、動くベクトルを算出
-		));
+	for(auto& timedCall : pEnemy_->timedCalls_){
+		timedCall->Update();
 	}
 	
 	// 条件を満たしたら動くベクトルを変更し状態遷移

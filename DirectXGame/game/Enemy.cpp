@@ -33,13 +33,11 @@ void Enemy::Init() {
 	moveSpeed_ = 0.1f;
 	state_ = new EnemyState_Approach(this);
 	isAlive_ = true;
-	frameCount_ = 0;
+	shotInterval_ = 60;
 	GH_ = TextureManager::Load("symmetryORE_STRONG.jpg");
 }
 
 void Enemy::Update() {
-
-	frameCount_++;
 
 	// Stateに応じたアップデート
 	state_->Update();
@@ -66,7 +64,20 @@ void Enemy::Draw(const ViewProjection& vp) {
 	model_->Draw(wt_, vp, GH_);
 }
 
+void Enemy::AddBullet(){
+	// 発射
+	Fire();
+
+	// 新しくセット
+	std::function<void()>func = std::bind(&Enemy::AddBullet, this);
+	timedCalls_.push_back(
+		std::make_unique<TimedCall>(func, shotInterval_)
+	);
+}
+
 void Enemy::UpdateBullet() {
+	// 終了した時限発動インスタンスの消去
+	std::erase_if(timedCalls_, [](auto& timedCall) { return timedCall->completion_; });
 }
 
 void Enemy::Rotate() {}
@@ -80,6 +91,20 @@ void Enemy::Move() {
 	wt_.scale_ = scale_;
 	wt_.translation_ += moveVec_ * moveSpeed_;
 	wt_.rotation_ = rotate_;
+}
+
+void Enemy::Fire(){
+	GetGameScenePtr()->AddEnemyBullet(new Bullet(
+		GetWorldTransform().translation_,// 初期座標
+		GetWorldTransform().rotation_,// 初期回転値
+		/*-----------------この長いの、プレイヤーの座標----------------*/
+		Multiply(
+			GetPlayerPtr()->GetWorldTransform().translation_,
+			RotateMatrix(GetPlayerPtr()->GetWorldTransform().parent_->rotation_))
+		+ GetPlayerPtr()->GetWorldTransform().parent_->translation_
+		/*--------------------------------------------------------*/
+		- GetWorldTransform().translation_// プレイヤーの座標から自身の座標を引き、動くベクトルを算出
+	));
 }
 
 void Enemy::ChangeState(BaseEnemyState* newState)

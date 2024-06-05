@@ -5,11 +5,20 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "EnemyState.h"
+#include "TimedCall.h"
+#include <functional>
+#include <list>
+#include <memory>
 
 class GameScene;
 class Player;
 
 class Enemy : public Object {
+
+	// 各ステートをfriend classに設定してアクセス権をあげる
+	friend class BaseEnemyState;
+	friend class EnemyState_Approach;
+	friend class EnemyState_Exit;
 
 public:
 	// コンストラクタ.デストラクタ
@@ -20,24 +29,31 @@ public:
 	void Update() override;
 	void Draw(const ViewProjection& vp) override;
 
-private:
+private:// 外部参照のためのポインタ変数
 	Player* playerPtr_ = nullptr;
 	GameScene* gameScenePtr_ = nullptr;
-	int frameCount_;
+
+private:// 通常のメンバ変数
+	uint32_t shotInterval_;
 	bool isAlive_;
 
-private:
+private:// メンバ変数(クラス)
 	BaseEnemyState* state_;
+	std::list<std::unique_ptr<TimedCall>>timedCalls_;
 
-private: // メンバ関数
+private: // プライベートメンバ関数
 	void UpdateBullet();
 	void Rotate();
 	void Translate();
 	void Move();
+	void Fire();
 
-public:
-	void ChangeState(BaseEnemyState* newState);
+public:// 誰からもアクセス可能
 	void OnCollision();
+
+private:// ステートクラスが操作する関数
+	void ChangeState(BaseEnemyState* newState);
+	void AddBullet();
 
 public:// アクセッサ
 	void SetPlayerPtr(Player* playerPtr) { playerPtr_ = playerPtr; }
@@ -48,8 +64,6 @@ public:// アクセッサ
 
 	void SetIsAlive(bool flag){ isAlive_ = flag; }
 	bool GetIsAlive()const{ return isAlive_; }
-
-	int GetFrameCount()const{ return frameCount_; }
 
 	void SetMoveVec(const Vector3& moveVec){ moveVec_ = moveVec; }
 };

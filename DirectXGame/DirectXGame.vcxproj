@@ -117,6 +117,7 @@
     <ClCompile Include="game\player.cpp" />
     <ClCompile Include="game\railCamera.cpp" />
     <ClCompile Include="game\skydome.cpp" />
+    <ClCompile Include="game\TimedCall.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math\Func\Easing.cpp" />
     <ClCompile Include="math\Func\MyFunc.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="game\player.h" />
     <ClInclude Include="game\railCamera.h" />
     <ClInclude Include="game\skydome.h" />
+    <ClInclude Include="game\TimedCall.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="math\Func\Easing.h" />
     <ClInclude Include="math\Func\MyFunc.h" />

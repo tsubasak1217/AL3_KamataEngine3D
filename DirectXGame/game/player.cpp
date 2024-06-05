@@ -86,6 +86,8 @@ void Player::DrawReticle()
 		screenReticlePos_.y -= (float)joyState.Gamepad.sThumbRY / SHRT_MAX * 6.0f;
 	}
 
+	
+
 	// 範囲内に収める
 	screenReticlePos_.x = std::clamp(screenReticlePos_.x, 0.0f, kWindowSize.x);
 	screenReticlePos_.y = std::clamp(screenReticlePos_.y, 0.0f, kWindowSize.y);

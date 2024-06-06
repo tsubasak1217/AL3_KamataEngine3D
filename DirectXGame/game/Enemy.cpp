@@ -106,8 +106,9 @@ void Enemy::Fire(){
 
 	// ベクトルから発射角を求める
 	Vector3 enemyRotate = {
+		enemyRotate.x = std::atan2(-dif.y, Length(dif)),// 縦方向の回転角(X軸回り)
 		enemyRotate.y = std::atan2(dif.x, dif.z),// 横方向の回転角(Y軸回り)
-		enemyRotate.x = std::atan2(dif.y, Length(dif))// 縦方向の回転角(X軸回り)
+		0.0f
 	};
 
 	// 弾の情報を書き込み作成

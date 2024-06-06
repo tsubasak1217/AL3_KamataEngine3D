@@ -9,7 +9,7 @@
 
 const float PI = std::numbers::pi_v<float>;
 
-Enemy::Enemy(Vector3 emitPos) { 
+Enemy::Enemy(Vector3 emitPos) {
 	Init();
 	wt_.translation_ = emitPos;
 }
@@ -94,16 +94,27 @@ void Enemy::Move() {
 }
 
 void Enemy::Fire(){
+
+	//プレイヤーの座標
+	Vector3 playerPos = Multiply(
+		GetPlayerPtr()->GetWorldTransform().translation_,
+		RotateMatrix(GetPlayerPtr()->GetWorldTransform().parent_->rotation_))
+		+ GetPlayerPtr()->GetWorldTransform().parent_->translation_;
+
+	//プレイヤーまでのベクトル
+	Vector3 dif = playerPos - GetWorldTransform().translation_;
+
+	// ベクトルから発射角を求める
+	Vector3 enemyRotate = {
+		enemyRotate.y = std::atan2(dif.x, dif.z),// 横方向の回転角(Y軸回り)
+		enemyRotate.x = std::atan2(dif.y, Length(dif))// 縦方向の回転角(X軸回り)
+	};
+
+	// 弾の情報を書き込み作成
 	GetGameScenePtr()->AddEnemyBullet(new Bullet(
 		GetWorldTransform().translation_,// 初期座標
-		GetWorldTransform().rotation_,// 初期回転値
-		/*-----------------この長いの、プレイヤーの座標----------------*/
-		Multiply(
-			GetPlayerPtr()->GetWorldTransform().translation_,
-			RotateMatrix(GetPlayerPtr()->GetWorldTransform().parent_->rotation_))
-		+ GetPlayerPtr()->GetWorldTransform().parent_->translation_
-		/*--------------------------------------------------------*/
-		- GetWorldTransform().translation_// プレイヤーの座標から自身の座標を引き、動くベクトルを算出
+		enemyRotate,// 初期回転値
+		dif// 発射ベクトル
 	));
 }
 

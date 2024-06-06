@@ -36,7 +36,7 @@ void RailCamera::Update()
 
 #endif // _DEBUG
 
-	wt_.translation_ += moveVec_ * moveSpeed_;
+	//wt_.translation_ += moveVec_ * moveSpeed_;
 	wt_.rotation_ += rotate_;
 	wt_.UpdateMatrix();
 

@@ -97,9 +97,9 @@ void Enemy::Fire(){
 
 	//プレイヤーの座標
 	Vector3 playerPos = Multiply(
-		GetPlayerPtr()->GetWorldTransform().translation_,
-		RotateMatrix(GetPlayerPtr()->GetWorldTransform().parent_->rotation_))
-		+ GetPlayerPtr()->GetWorldTransform().parent_->translation_;
+		playerPtr_->GetWorldTransform().translation_,
+		RotateMatrix(playerPtr_->GetWorldTransform().parent_->rotation_))
+		+ playerPtr_->GetWorldTransform().parent_->translation_;
 
 	//プレイヤーまでのベクトル
 	Vector3 dif = playerPos - GetWorldTransform().translation_;
@@ -115,7 +115,8 @@ void Enemy::Fire(){
 	GetGameScenePtr()->AddEnemyBullet(new Bullet(
 		GetWorldTransform().translation_,// 初期座標
 		enemyRotate,// 初期回転値
-		dif// 発射ベクトル
+		dif,// 発射ベクトル
+		playerPtr_// 追従対象としてプレイヤーのポインタを持たせる
 	));
 }
 

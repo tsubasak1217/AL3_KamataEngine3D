@@ -57,7 +57,6 @@ private:// ステートクラスが操作する関数
 
 public:// アクセッサ
 	void SetPlayerPtr(Player* playerPtr) { playerPtr_ = playerPtr; }
-	Player* GetPlayerPtr()const{ return playerPtr_; }
 
 	void SetGameScenePtr(GameScene* gameScenePtr) { gameScenePtr_ = gameScenePtr; }
 	GameScene* GetGameScenePtr()const{ return gameScenePtr_; }

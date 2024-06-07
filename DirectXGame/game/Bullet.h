@@ -8,7 +8,7 @@
 class Bullet : public Object {
 public:
 	Bullet();
-	Bullet(const Vector3& pos,const Vector3& rotate,const Vector3& moveVec);
+	Bullet(const Vector3& pos,const Vector3& rotate,const Vector3& moveVec,Object* homingObjectPtr = nullptr);
 	~Bullet();
 	void Init() override;
 	void Update() override;
@@ -16,12 +16,19 @@ public:
 	void Fin() override;
 
 private:
+	Object* homingObjectPtr_ = nullptr;
+
+private:
 	const int32_t kLifetime_ = 60 * 5;
 	int32_t deathTimer_;
+
+private:
+	void Homing();
 
 public:
 	void OnCollision();
 
 public:
 	const bool GetIsAlive()const { return deathTimer_ > 0; }
+	void SetHomingObject(Object* objectPtr){ homingObjectPtr_ = objectPtr; }
 };

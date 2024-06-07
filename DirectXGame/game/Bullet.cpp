@@ -5,12 +5,13 @@ Bullet::Bullet()
 {
 }
 
-Bullet::Bullet(const Vector3& pos, const Vector3& rotate, const Vector3& moveVec) {
+Bullet::Bullet(const Vector3& pos, const Vector3& rotate, const Vector3& moveVec, Object* homingObjectPtr) {
 	Init();
 	wt_.Initialize();
 	wt_.translation_ = pos;
 	wt_.rotation_ = rotate;
 	moveVec_ = Normalize(moveVec);
+	homingObjectPtr_ = homingObjectPtr;
 }
 
 Bullet::~Bullet() { Fin(); }
@@ -45,6 +46,18 @@ void Bullet::Draw(const ViewProjection& vp) { model_->Draw(wt_, vp, GH_); }
 void Bullet::Fin() {
 	delete model_;
 	model_ = nullptr;
+}
+
+void Bullet::Homing(){
+
+	// ホーミング対象がなければ処理しない
+	if(!homingObjectPtr_){ return; }
+
+	// 座標を取得
+	Vector3 aimPos = homingObjectPtr_->GetWorldTransform().translation_;
+	// 差分ベクトルを正規化
+	Vector3 dif = Normalize(aimPos - wt_.translation_);
+
 }
 
 void Bullet::OnCollision(){

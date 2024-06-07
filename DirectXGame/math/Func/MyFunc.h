@@ -84,6 +84,9 @@ void ShiftLineCtrl(Vector2& pos1, Vector2& pos2, float distance);
 int negaZero(int num);
 float negaZero(float num);
 
+// Lerp
+Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t);
+
 //================================================================
 //                      行列の計算関数
 //================================================================

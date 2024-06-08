@@ -198,6 +198,11 @@ void Player::Move() {
 
 	// プレイヤーに合わせてレティクルも移動
 	reticleWt_.translation_ = reticleVec_ * reticleDistance_;
+
+	// ワールド座標の更新
+	worldPos_ = 
+		Multiply(wt_.translation_, RotateMatrix(wt_.parent_->rotation_)) 
+		+ wt_.parent_->translation_;
 }
 
 void Player::UpdateReticle()

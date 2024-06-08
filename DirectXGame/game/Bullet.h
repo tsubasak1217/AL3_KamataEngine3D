@@ -21,6 +21,8 @@ private:
 private:
 	const int32_t kLifetime_ = 60 * 5;
 	int32_t deathTimer_;
+	float homingLevel_;
+	Vector3 prePos_;
 
 private:
 	void Homing();

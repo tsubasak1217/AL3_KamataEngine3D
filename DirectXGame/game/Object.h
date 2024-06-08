@@ -28,6 +28,9 @@ protected:
 	Vector3 rotate_;
 	Vector3 translate_;
 
+	// 最終的なワールド空間上の座標
+	Vector3 worldPos_;
+
 	//
 	Model* model_ = nullptr;
 	WorldTransform wt_;
@@ -37,6 +40,7 @@ protected:
 
 public:
 	WorldTransform& GetWorldTransform() { return wt_; }
+	Vector3 GetWorldPos()const{ return worldPos_; }
 	Model* GetModel() { return model_; }
 	void SetModel(Model* model) { model_ = model; }
 	float GetRadius()const{ return radius_; }

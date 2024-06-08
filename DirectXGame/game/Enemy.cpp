@@ -91,29 +91,26 @@ void Enemy::Move() {
 	wt_.scale_ = scale_;
 	wt_.translation_ += moveVec_ * moveSpeed_;
 	wt_.rotation_ = rotate_;
+
+	// ワールド座標の更新
+	worldPos_ = wt_.translation_;
 }
 
 void Enemy::Fire(){
 
-	//プレイヤーの座標
-	Vector3 playerPos = Multiply(
-		playerPtr_->GetWorldTransform().translation_,
-		RotateMatrix(playerPtr_->GetWorldTransform().parent_->rotation_))
-		+ playerPtr_->GetWorldTransform().parent_->translation_;
-
 	//プレイヤーまでのベクトル
-	Vector3 dif = playerPos - GetWorldTransform().translation_;
+	Vector3 dif = playerPtr_->GetWorldPos() - GetWorldTransform().translation_;
 
 	// ベクトルから発射角を求める
 	Vector3 enemyRotate = {
-		enemyRotate.x = std::atan2(-dif.y, Length(dif)),// 縦方向の回転角(X軸回り)
-		enemyRotate.y = std::atan2(dif.x, dif.z),// 横方向の回転角(Y軸回り)
+		std::atan2(-dif.y, Length(dif)),// 縦方向の回転角(X軸回り)
+		std::atan2(dif.x, dif.z),// 横方向の回転角(Y軸回り)
 		0.0f
 	};
 
 	// 弾の情報を書き込み作成
 	GetGameScenePtr()->AddEnemyBullet(new Bullet(
-		GetWorldTransform().translation_,// 初期座標
+		wt_.translation_,// 初期座標
 		enemyRotate,// 初期回転値
 		dif,// 発射ベクトル
 		playerPtr_// 追従対象としてプレイヤーのポインタを持たせる

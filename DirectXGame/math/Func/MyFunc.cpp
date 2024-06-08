@@ -19,7 +19,7 @@ std::vector<std::vector<int>>LoadFile(const std::string& csvFilePath) {
 	std::string line, value;
 
 	// ファイルから読み取った1行をlineに格納 (改行区切り)
-	while (std::getline(file, line)) {
+	while(std::getline(file, line)) {
 
 		// 一行ごとの最終結果を入れる配列
 		std::vector<int> row;
@@ -29,7 +29,7 @@ std::vector<std::vector<int>>LoadFile(const std::string& csvFilePath) {
 
 		/*issLineからカンマ区切りでデータを読み込みvalueに格納
 		(行の値を1文字ずつに切り分ける)*/
-		while (std::getline(issLine, value, ',')) {
+		while(std::getline(issLine, value, ',')) {
 
 			// 切り分けた一文字を char → int型に変換
 			int intValue = atoi(value.c_str());
@@ -53,13 +53,13 @@ std::vector<std::vector<int>>LoadFile(const std::string& csvFilePath) {
 int FrameToClock(int count, int tranceMode) {
 
 	int result = 0;
-	enum TranceMode {
+	enum TranceMode{
 		Sec,
 		Min,
 		Hour
 	};
 
-	switch (tranceMode) {
+	switch(tranceMode) {
 	case Sec:
 		result = count / 60;
 		break;
@@ -113,7 +113,7 @@ Vector2 Normalize(const Vector2& pos1, const Vector2& pos2) {
 
 	Vector2 vec = pos2 - pos1;
 
-	if (float length = Length(vec)) {
+	if(float length = Length(vec)) {
 		return vec / length;
 	} else {
 		return { 0.0f,0.0f };
@@ -122,21 +122,21 @@ Vector2 Normalize(const Vector2& pos1, const Vector2& pos2) {
 Vector3 Normalize(const Vector3& pos1, const Vector3& pos2) {
 	Vector3 vec = pos2 - pos1;
 
-	if (float length = Length(vec)) {
+	if(float length = Length(vec)) {
 		return vec / length;
 	} else {
 		return { 0.0f,0.0f,0.0f };
 	}
 }
 Vector2 Normalize(const Vector2& vec) {
-	if (float length = Length(vec)) {
+	if(float length = Length(vec)) {
 		return vec / length;
 	} else {
 		return { 0.0f,0.0f };
 	}
 }
 Vector3 Normalize(const Vector3& vec) {
-	if (float length = Length(vec)) {
+	if(float length = Length(vec)) {
 		return vec / length;
 	} else {
 		return { 0.0f,0.0f,0.0f };
@@ -214,7 +214,7 @@ Vector2 CrossPos2(Vector2 line1Pos1, Vector2 line1Pos2, Vector2 line2Pos1, Vecto
 
 	Vector2 crossPos = { 0.0f,0.0f };
 
-	if (s1 != 0 && s2 != 0) {
+	if(s1 != 0 && s2 != 0) {
 		crossPos = {
 			line1Pos1.x + (line1Pos2.x - line1Pos1.x) * s1 / (s1 + s2),
 			line1Pos1.y + (line1Pos2.y - line1Pos1.y) * s1 / (s1 + s2)
@@ -266,6 +266,28 @@ float negaZero(float num) {
 	return (num < 0) ? 0 : num;
 }
 
+Vector3 Slerp(const Vector3& startVec, const Vector3& endVec, float t)
+{
+	// 正規化する
+	Vector3 start = Normalize(startVec);
+	Vector3 end = Normalize(endVec);
+
+	float cos = std::clamp(Dot(start, end),-1.0f,1.0f);// 正規化ベクトル同士の内積なのでcosθの値が出る
+	float theta = std::acos(cos);// cosθからθを算出
+	float sin = std::sin(theta);// sinθの値を計算
+
+	// sinが0の場合、startとendが同じベクトルであるのでリターン
+	if(sin == 0.0f){return start;}
+
+	t = std::clamp(t, 0.0f, 1.0f);// 媒介変数を0~1に収める
+
+	// 補完ベクトルを求める
+	start = start * (std::sin(theta * (1.0f - t)) / sin);
+	end = end * (std::sin(theta * t) / sin);
+
+	return start + end;
+}
+
 //================================================================
 //                        行列関数
 //================================================================
@@ -275,8 +297,8 @@ Matrix2x2 Add(const Matrix2x2& matrix1, const Matrix2x2& matrix2) {
 
 	Matrix2x2 result;
 
-	for (int i = 0; i < 2; i++) {
-		for (int j = 0; j < 2; j++) {
+	for(int i = 0; i < 2; i++) {
+		for(int j = 0; j < 2; j++) {
 			result.m[i][j] = matrix1.m[i][j] + matrix2.m[i][j];
 		}
 	}
@@ -287,8 +309,8 @@ Matrix3x3 Add(const Matrix3x3& matrix1, const Matrix3x3& matrix2) {
 
 	Matrix3x3 result;
 
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
+	for(int i = 0; i < 3; i++) {
+		for(int j = 0; j < 3; j++) {
 			result.m[i][j] = matrix1.m[i][j] + matrix2.m[i][j];
 		}
 	}
@@ -300,8 +322,8 @@ Matrix4x4 Add(const Matrix4x4& matrix1, const Matrix4x4& matrix2) {
 
 	Matrix4x4 result;
 
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
+	for(int i = 0; i < 4; i++) {
+		for(int j = 0; j < 4; j++) {
 			result.m[i][j] = matrix1.m[i][j] + matrix2.m[i][j];
 		}
 	}
@@ -314,8 +336,8 @@ Matrix2x2 Subtract(const Matrix2x2& matrix1, const Matrix2x2& matrix2) {
 
 	Matrix2x2 result;
 
-	for (int i = 0; i < 2; i++) {
-		for (int j = 0; j < 2; j++) {
+	for(int i = 0; i < 2; i++) {
+		for(int j = 0; j < 2; j++) {
 			result.m[i][j] = matrix1.m[i][j] - matrix2.m[i][j];
 		}
 	}
@@ -326,8 +348,8 @@ Matrix3x3 Subtract(const Matrix3x3& matrix1, const Matrix3x3& matrix2) {
 
 	Matrix3x3 result;
 
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
+	for(int i = 0; i < 3; i++) {
+		for(int j = 0; j < 3; j++) {
 			result.m[i][j] = matrix1.m[i][j] - matrix2.m[i][j];
 		}
 	}
@@ -339,8 +361,8 @@ Matrix4x4 Subtract(const Matrix4x4& matrix1, const Matrix4x4& matrix2) {
 
 	Matrix4x4 result;
 
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
+	for(int i = 0; i < 4; i++) {
+		for(int j = 0; j < 4; j++) {
 			result.m[i][j] = matrix1.m[i][j] - matrix2.m[i][j];
 		}
 	}
@@ -352,8 +374,8 @@ Matrix4x4 Subtract(const Matrix4x4& matrix1, const Matrix4x4& matrix2) {
 Matrix2x2 Devide(const Matrix2x2& matrix, float devideNum) {
 	Matrix2x2 result;
 
-	for (int i = 0; i < 2; i++) {
-		for (int j = 0; j < 2; j++) {
+	for(int i = 0; i < 2; i++) {
+		for(int j = 0; j < 2; j++) {
 			result.m[i][j] = matrix.m[i][j] / devideNum;
 		}
 	}
@@ -365,8 +387,8 @@ Matrix3x3 Devide(const Matrix3x3& matrix, float devideNum) {
 
 	Matrix3x3 result;
 
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
+	for(int i = 0; i < 3; i++) {
+		for(int j = 0; j < 3; j++) {
 			result.m[i][j] = matrix.m[i][j] / devideNum;
 		}
 	}
@@ -378,8 +400,8 @@ Matrix4x4 Devide(const Matrix4x4& matrix, float devideNum) {
 
 	Matrix4x4 result;
 
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
+	for(int i = 0; i < 4; i++) {
+		for(int j = 0; j < 4; j++) {
 			result.m[i][j] = matrix.m[i][j] / devideNum;
 		}
 	}
@@ -411,7 +433,7 @@ Vector2 Multiply(const Vector2& vector, const Matrix3x3& matrix) {
 	return result;
 }
 
-Vector3 Multiply(const Vector3& vector, const Matrix4x4& matrix) { 
+Vector3 Multiply(const Vector3& vector, const Matrix4x4& matrix) {
 
 	Vector3 result;
 	float w;
@@ -435,8 +457,8 @@ Matrix2x2 Multiply(const Matrix2x2& matrix1, const Matrix2x2& matrix2) {
 
 	Matrix2x2 result;
 
-	for (int i = 0; i < 2; i++) {
-		for (int j = 0; j < 2; j++) {
+	for(int i = 0; i < 2; i++) {
+		for(int j = 0; j < 2; j++) {
 
 			result.m[i][j] =
 				(matrix1.m[i][0] * matrix2.m[0][j]) +
@@ -450,8 +472,8 @@ Matrix3x3 Multiply(const Matrix3x3& matrix1, const Matrix3x3& matrix2) {
 
 	Matrix3x3 result;
 
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
+	for(int i = 0; i < 3; i++) {
+		for(int j = 0; j < 3; j++) {
 
 			result.m[i][j] =
 				(matrix1.m[i][0] * matrix2.m[0][j]) +
@@ -467,8 +489,8 @@ Matrix4x4 Multiply(const Matrix4x4& matrix1, const Matrix4x4& matrix2) {
 
 	Matrix4x4 result;
 
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
+	for(int i = 0; i < 4; i++) {
+		for(int j = 0; j < 4; j++) {
 
 			result.m[i][j] =
 				(matrix1.m[i][0] * matrix2.m[0][j]) +
@@ -491,8 +513,8 @@ Vector3 Multiply(const Vector3& vector, float scalar) {
 Matrix2x2 Multiply(const Matrix2x2& matrix, float scalar) {
 
 	Matrix2x2 result;
-	for (int i = 0; i < 2; i++) {
-		for (int j = 0; j < 2; j++) {
+	for(int i = 0; i < 2; i++) {
+		for(int j = 0; j < 2; j++) {
 			result.m[i][j] = matrix.m[i][j] * scalar;
 		}
 	}
@@ -502,8 +524,8 @@ Matrix2x2 Multiply(const Matrix2x2& matrix, float scalar) {
 Matrix3x3 Multiply(const Matrix3x3& matrix, float scalar) {
 
 	Matrix3x3 result;
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
+	for(int i = 0; i < 3; i++) {
+		for(int j = 0; j < 3; j++) {
 			result.m[i][j] = matrix.m[i][j] * scalar;
 		}
 	}
@@ -513,8 +535,8 @@ Matrix3x3 Multiply(const Matrix3x3& matrix, float scalar) {
 Matrix4x4 Multiply(const Matrix4x4& matrix, float scalar) {
 
 	Matrix4x4 result;
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
+	for(int i = 0; i < 4; i++) {
+		for(int j = 0; j < 4; j++) {
 			result.m[i][j] = matrix.m[i][j] * scalar;
 		}
 	}
@@ -699,7 +721,7 @@ Matrix4x4 RotateMatrix(const Vector3& rotate) {
 	Matrix4x4 rotateMat[3];
 
 	/*-------X軸の回転行列-------*/
-	if (rotate.x) {
+	if(rotate.x) {
 
 		float sin = std::sin(rotate.x);
 		float cos = std::cos(rotate.x);
@@ -728,7 +750,7 @@ Matrix4x4 RotateMatrix(const Vector3& rotate) {
 	}
 
 	/*-------Y軸の回転行列-------*/
-	if (rotate.y) {
+	if(rotate.y) {
 
 		float sin = std::sin(rotate.y);
 		float cos = std::cos(rotate.y);
@@ -757,7 +779,7 @@ Matrix4x4 RotateMatrix(const Vector3& rotate) {
 	}
 
 	/*-------Z軸の回転行列-------*/
-	if (rotate.z) {
+	if(rotate.z) {
 
 		float sin = std::sin(rotate.z);
 		float cos = std::cos(rotate.z);
@@ -866,14 +888,14 @@ float Determinant3x3(const Matrix3x3& mat) {
 // 4x4 行列の行列式を計算する関数
 float Determinant4x4(const Matrix4x4& mat) {
 	float det = 0.0f;
-	for (int i = 0; i < 4; i++) {
+	for(int i = 0; i < 4; i++) {
 
 		Matrix3x3 minor;
 
-		for (int j = 0; j < 3; j++) {
+		for(int j = 0; j < 3; j++) {
 			int k = 0;
-			for (int l = 0; l < 4; l++) {
-				if (l != i) {
+			for(int l = 0; l < 4; l++) {
+				if(l != i) {
 					minor.m[j][k++] = mat.m[j + 1][l];
 				}
 			}
@@ -935,8 +957,8 @@ Matrix4x4 InverseMatrix(const Matrix4x4& matrix) {
 	Matrix4x4 inv;
 	float sweep[4][8];
 
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
+	for(int i = 0; i < 4; i++) {
+		for(int j = 0; j < 4; j++) {
 			// sweepの左側に逆行列を求める行列をセット
 			sweep[i][j] = matrix.m[i][j];
 
@@ -946,7 +968,7 @@ Matrix4x4 InverseMatrix(const Matrix4x4& matrix) {
 	}
 
 	// 左半分が単位行列になるまで繰り返す (右半分に逆行列が求められる)
-	for (int col = 0; col < 4; col++) {
+	for(int col = 0; col < 4; col++) {
 
 		/*------------------------------------------------------*/
 		/*				       	ソート、除外						*/
@@ -957,8 +979,8 @@ Matrix4x4 InverseMatrix(const Matrix4x4& matrix) {
 		int maxIdx = col;
 
 		// 今見ている対角成分より大きい絶対値を持つ要素がその列のその行より後にあるか探す
-		for (int row = col + 1; row < 4; row++) {
-			if (fabs(sweep[row][col]) > max) {
+		for(int row = col + 1; row < 4; row++) {
+			if(fabs(sweep[row][col]) > max) {
 				max = fabs(sweep[row][col]);
 				maxIdx = row;
 			}
@@ -968,8 +990,8 @@ Matrix4x4 InverseMatrix(const Matrix4x4& matrix) {
 		assert(fabs(sweep[maxIdx][col]) > 0);
 
 		// 見つかった場合、その要素が見つかった行と今の行の要素を入れ替える
-		if (col != maxIdx) {
-			for (int col2 = 0; col2 < 8; col2++) {
+		if(col != maxIdx) {
+			for(int col2 = 0; col2 < 8; col2++) {
 				std::swap(sweep[maxIdx][col2], sweep[col][col2]);
 			}
 		}
@@ -983,21 +1005,21 @@ Matrix4x4 InverseMatrix(const Matrix4x4& matrix) {
 		// 対角成分 sweep[col][col]に掛けると1になる値を求める
 		float x = 1.0f / sweep[col][col];
 
-		for (int col2 = 0; col2 < 8; col2++) {
+		for(int col2 = 0; col2 < 8; col2++) {
 			// この計算でsweep[col][col]が1になる 
 			// (対角成分以外にもその行すべての要素に掛ける。)
 			sweep[col][col2] *= x;
 		}
 
 		/*------- 今見ている列の対角成分以外を0にする -------*/
-		for (int row = 0; row < 4; row++) {
+		for(int row = 0; row < 4; row++) {
 
-			if (row == col) { continue; }// 対角成分はそのまま
+			if(row == col) { continue; }// 対角成分はそのまま
 
 			// 対角成分のある行以外に掛ける値を求める
 			x = -sweep[row][col];
 
-			for (int col2 = 0; col2 < 8; col2++) {
+			for(int col2 = 0; col2 < 8; col2++) {
 				// 対角成分を1にした行をa倍して足していく
 				// すると対角成分以外のsweep[row][col]が0になる ( 自分に対して 1 x -自分 を足しているため。)
 				sweep[row][col2] += sweep[col][col2] * x;
@@ -1006,8 +1028,8 @@ Matrix4x4 InverseMatrix(const Matrix4x4& matrix) {
 	}
 
 	// sweepの右半分がmatrixの逆行列
-	for (int row = 0; row < 4; row++) {
-		for (int col = 0; col < 4; col++) {
+	for(int row = 0; row < 4; row++) {
+		for(int col = 0; col < 4; col++) {
 			inv.m[row][col] = sweep[row][4 + col];
 		}
 	}
@@ -1048,8 +1070,8 @@ Matrix3x3 Transpose(const Matrix3x3& matrix) {
 
 Matrix4x4 Transpose(const Matrix4x4& matrix) {
 	Matrix4x4 result;
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
+	for(int i = 0; i < 4; i++) {
+		for(int j = 0; j < 4; j++) {
 			result.m[i][j] = matrix.m[j][i];
 		}
 	}
@@ -1236,9 +1258,9 @@ bool IsHitBox_Ball(Vector2 boxCenter, Vector2 ballPos, Vector2 boxSize, float ba
 	float distX = ballPos.x - boxCenter.x;
 	float distY = ballPos.y - boxCenter.y;
 
-	if (distX >= -boxSize.x / 2.0f && distX <= boxSize.x / 2.0f) {
+	if(distX >= -boxSize.x / 2.0f && distX <= boxSize.x / 2.0f) {
 
-		if (distY >= (-boxSize.y / 2.0f) - ballRasius && distY <= (boxSize.y / 2.0f) + ballRasius) {
+		if(distY >= (-boxSize.y / 2.0f) - ballRasius && distY <= (boxSize.y / 2.0f) + ballRasius) {
 
 			return true;
 
@@ -1246,9 +1268,9 @@ bool IsHitBox_Ball(Vector2 boxCenter, Vector2 ballPos, Vector2 boxSize, float ba
 			return false;
 		}
 
-	} else if (distY >= -boxSize.y / 2.0f && distY <= boxSize.y / 2.0f) {
+	} else if(distY >= -boxSize.y / 2.0f && distY <= boxSize.y / 2.0f) {
 
-		if (distX >= (-boxSize.x / 2.0f) - ballRasius && distX <= (boxSize.x / 2.0f) + ballRasius) {
+		if(distX >= (-boxSize.x / 2.0f) - ballRasius && distX <= (boxSize.x / 2.0f) + ballRasius) {
 			return true;
 
 		} else {
@@ -1257,23 +1279,23 @@ bool IsHitBox_Ball(Vector2 boxCenter, Vector2 ballPos, Vector2 boxSize, float ba
 
 	} else {
 
-		if (distX < 0 && distY < 0) {
-			if (
+		if(distX < 0 && distY < 0) {
+			if(
 				Length(boxCenter.x - boxSize.x / 2.0f, boxCenter.y - boxSize.y / 2.0f, ballPos.x, ballPos.y) <= ballRasius) {
 				return true;
 			} else {
 				return false;
 			}
-		} else if (distX >= 0 && distY < 0) {
-			if (
+		} else if(distX >= 0 && distY < 0) {
+			if(
 				Length(boxCenter.x + boxSize.x / 2.0f, boxCenter.y - boxSize.y / 2.0f, ballPos.x, ballPos.y) <= ballRasius) {
 				return true;
 			} else {
 				return false;
 			}
 
-		} else if (distX < 0 && distY >= 0) {
-			if (
+		} else if(distX < 0 && distY >= 0) {
+			if(
 				Length(boxCenter.x - boxSize.x / 2.0f, boxCenter.y + boxSize.y / 2.0f, ballPos.x, ballPos.y) <= ballRasius) {
 				return true;
 			} else {
@@ -1281,7 +1303,7 @@ bool IsHitBox_Ball(Vector2 boxCenter, Vector2 ballPos, Vector2 boxSize, float ba
 			}
 
 		} else {
-			if (
+			if(
 				Length(boxCenter.x + boxSize.x / 2.0f, boxCenter.y + boxSize.y / 2.0f, ballPos.x, ballPos.y) <= ballRasius) {
 				return true;
 			} else {
@@ -1296,11 +1318,11 @@ int IsHitBox_BallDirection(Vector2 boxCenter, Vector2 ballPos, Vector2 boxSize, 
 	float distX = ballPos.x - boxCenter.x;
 	float distY = ballPos.y - boxCenter.y;
 
-	if (distX >= -boxSize.x / 2.0f && distX <= boxSize.x / 2.0f) {
+	if(distX >= -boxSize.x / 2.0f && distX <= boxSize.x / 2.0f) {
 
-		if (distY >= (-boxSize.y / 2.0f) - ballRasius && distY <= (boxSize.y / 2.0f) + ballRasius) {
+		if(distY >= (-boxSize.y / 2.0f) - ballRasius && distY <= (boxSize.y / 2.0f) + ballRasius) {
 
-			if (distY >= 0) {
+			if(distY >= 0) {
 				return 1;//上面に当たった
 			} else {
 				return 3;//下面に当たった
@@ -1310,11 +1332,11 @@ int IsHitBox_BallDirection(Vector2 boxCenter, Vector2 ballPos, Vector2 boxSize, 
 			return false;
 		}
 
-	} else if (distY >= -boxSize.y / 2.0f && distY <= boxSize.y / 2.0f) {
+	} else if(distY >= -boxSize.y / 2.0f && distY <= boxSize.y / 2.0f) {
 
-		if (distX >= (-boxSize.x / 2.0f) - ballRasius && distX <= (boxSize.x / 2.0f) + ballRasius) {
+		if(distX >= (-boxSize.x / 2.0f) - ballRasius && distX <= (boxSize.x / 2.0f) + ballRasius) {
 
-			if (distX >= 0) {
+			if(distX >= 0) {
 				return 2;//右面に当たった
 			} else {
 				return 4;//左面に当たった
@@ -1326,10 +1348,10 @@ int IsHitBox_BallDirection(Vector2 boxCenter, Vector2 ballPos, Vector2 boxSize, 
 
 	} else {
 
-		if (distX < 0 && distY >= 0) {//左上
-			if (Length(boxCenter.x - boxSize.x / 2.0f, boxCenter.y + boxSize.y / 2.0f, ballPos.x, ballPos.y) <= ballRasius) {
+		if(distX < 0 && distY >= 0) {//左上
+			if(Length(boxCenter.x - boxSize.x / 2.0f, boxCenter.y + boxSize.y / 2.0f, ballPos.x, ballPos.y) <= ballRasius) {
 
-				if (sqrtf(powf(distX, 2.0f)) < sqrtf(powf(distY, 2.0f))) {
+				if(sqrtf(powf(distX, 2.0f)) < sqrtf(powf(distY, 2.0f))) {
 					return 1;//上面に当たった
 				} else {
 					return 4;//左面に当たった
@@ -1338,10 +1360,10 @@ int IsHitBox_BallDirection(Vector2 boxCenter, Vector2 ballPos, Vector2 boxSize, 
 			} else {
 				return false;
 			}
-		} else if (distX >= 0 && distY >= 0) {//右上
-			if (Length(boxCenter.x + boxSize.x / 2.0f, boxCenter.y + boxSize.y / 2.0f, ballPos.x, ballPos.y) <= ballRasius) {
+		} else if(distX >= 0 && distY >= 0) {//右上
+			if(Length(boxCenter.x + boxSize.x / 2.0f, boxCenter.y + boxSize.y / 2.0f, ballPos.x, ballPos.y) <= ballRasius) {
 
-				if (sqrtf(powf(distX, 2.0f)) < sqrtf(powf(distY, 2.0f))) {
+				if(sqrtf(powf(distX, 2.0f)) < sqrtf(powf(distY, 2.0f))) {
 					return 1;//上面に当たった
 				} else {
 					return 2;//右面に当たった
@@ -1351,10 +1373,10 @@ int IsHitBox_BallDirection(Vector2 boxCenter, Vector2 ballPos, Vector2 boxSize, 
 				return false;
 			}
 
-		} else if (distX < 0 && distY < 0) {//左下
-			if (Length(boxCenter.x - boxSize.x / 2.0f, boxCenter.y - boxSize.y / 2.0f, ballPos.x, ballPos.y) <= ballRasius) {
+		} else if(distX < 0 && distY < 0) {//左下
+			if(Length(boxCenter.x - boxSize.x / 2.0f, boxCenter.y - boxSize.y / 2.0f, ballPos.x, ballPos.y) <= ballRasius) {
 
-				if (sqrtf(powf(distX, 2.0f)) < sqrtf(powf(distY, 2.0f))) {
+				if(sqrtf(powf(distX, 2.0f)) < sqrtf(powf(distY, 2.0f))) {
 					return 3;//上面に当たった
 				} else {
 					return 4;//左面に当たった
@@ -1365,9 +1387,9 @@ int IsHitBox_BallDirection(Vector2 boxCenter, Vector2 ballPos, Vector2 boxSize, 
 			}
 
 		} else {//右下
-			if (Length(boxCenter.x + boxSize.x / 2.0f, boxCenter.y - boxSize.y / 2.0f, ballPos.x, ballPos.y) <= ballRasius) {
+			if(Length(boxCenter.x + boxSize.x / 2.0f, boxCenter.y - boxSize.y / 2.0f, ballPos.x, ballPos.y) <= ballRasius) {
 
-				if (sqrtf(powf(distX, 2.0f)) < sqrtf(powf(distY, 2.0f))) {
+				if(sqrtf(powf(distX, 2.0f)) < sqrtf(powf(distY, 2.0f))) {
 					return 3;//上面に当たった
 				} else {
 					return 2;//左面に当たった

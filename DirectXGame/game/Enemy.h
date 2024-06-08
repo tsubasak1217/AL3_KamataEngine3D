@@ -48,9 +48,6 @@ private: // プライベートメンバ関数
 	void Move();
 	void Fire();
 
-public:// 誰からもアクセス可能
-	void OnCollision();
-
 private:// ステートクラスが操作する関数
 	void ChangeState(BaseEnemyState* newState);
 	void AddBullet();
@@ -65,4 +62,7 @@ public:// アクセッサ
 	bool GetIsAlive()const{ return isAlive_; }
 
 	void SetMoveVec(const Vector3& moveVec){ moveVec_ = moveVec; }
+
+public:// 誰からもアクセス可能
+	void OnCollision()override;
 };

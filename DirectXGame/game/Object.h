@@ -45,4 +45,7 @@ public:
 	void SetModel(Model* model) { model_ = model; }
 	float GetRadius()const{ return radius_; }
 	void SetParentPtr(const WorldTransform* parentWt){ wt_.parent_ = parentWt; }
+
+public:
+	virtual void OnCollision();
 };

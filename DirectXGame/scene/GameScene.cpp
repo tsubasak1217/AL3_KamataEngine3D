@@ -178,53 +178,35 @@ void GameScene::Draw() {
 #pragma endregion
 }
 
-void GameScene::CheckCollision(){
+// オブジェクト同士の当たり判定を取る関数
+void GameScene::CheckCollisionPair(Object* obj1, Object* obj2){
 
-	Vector3 playerPos =
-		Multiply(
-			player_->GetWorldTransform().translation_,
-			RotateMatrix(player_->GetWorldTransform().parent_->rotation_))
-		+ player_->GetWorldTransform().parent_->translation_;
+	float distance = Length(obj1->GetWorldPos() - obj2->GetWorldPos());
+
+	if(distance <= obj1->GetRadius() + obj2->GetRadius()){
+		obj1->OnCollision();
+		obj2->OnCollision();
+	}
+}
+
+void GameScene::CheckCollision(){
 
 	// 敵弾と自分
 	for(auto& bullet : enemyBullets_){
-		float distance = Length(
-			playerPos - bullet->GetWorldTransform().translation_
-		);
-
-		if(distance <= player_->GetRadius() + bullet->GetRadius()){
-			player_->OnCollision();
-			bullet->OnCollision();
-		}
+		CheckCollisionPair(bullet.get(), player_);
 	}
 
 	// 自弾と敵
 	for(auto& bullet : playerBullets_){
 		for(auto& enemy : enemy_){
-			float distance = Length(
-				enemy->GetWorldTransform().translation_ -
-				bullet->GetWorldTransform().translation_
-			);
-
-			if(distance <= enemy->GetRadius() + bullet->GetRadius()){
-				enemy->OnCollision();
-				bullet->OnCollision();
-			}
+			CheckCollisionPair(bullet.get(), enemy.get());
 		}
 	}
 
 	// 自弾と敵弾
 	for(auto& playerBullet : playerBullets_){
 		for(auto& enemyBullet : enemyBullets_){
-			float distance = Length(
-				playerBullet->GetWorldTransform().translation_ -
-				enemyBullet->GetWorldTransform().translation_
-			);
-
-			if(distance <= playerBullet->GetRadius() + enemyBullet->GetRadius()){
-				playerBullet->OnCollision();
-				enemyBullet->OnCollision();
-			}
+			CheckCollisionPair(enemyBullet.get(), playerBullet.get());
 		}
 	}
 }

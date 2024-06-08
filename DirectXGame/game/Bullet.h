@@ -28,7 +28,7 @@ private:
 	void Homing();
 
 public:
-	void OnCollision();
+	void OnCollision()override;
 
 public:
 	const bool GetIsAlive()const { return deathTimer_ > 0; }

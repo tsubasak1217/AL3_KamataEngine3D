@@ -14,3 +14,5 @@ void Object::Update() {}
 void Object::Draw(const ViewProjection& vp) { vp; }
 
 void Object::Fin() {}
+
+void Object::OnCollision(){}

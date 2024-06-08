@@ -87,6 +87,7 @@ private: // メンバ変数
 	int32_t waitTimer_;
 
 private:
+	void CheckCollisionPair(Object* obj1,Object* obj2);
 	void CheckCollision();
 	void LoadEnemyCommands(std::string filePath);
 	void UpdateEnemyCommands();

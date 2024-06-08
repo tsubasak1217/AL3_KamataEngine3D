@@ -45,7 +45,9 @@ private: // メンバ関数
 	void UpdateReticle();
 
 public:
-	void OnCollision();
 	void SetGameScenePtr(GameScene* gameScenePtr){ gameScenePtr_ = gameScenePtr; }
 	void SetCameraPtr(RailCamera* railcamera){ railcamera_ = railcamera; }
+
+public:
+	void OnCollision()override;
 };

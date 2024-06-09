@@ -21,6 +21,8 @@ GameScene::~GameScene() {
 	player_ = nullptr;
 	for(auto& bullet : enemyBullets_){ bullet.reset(); }
 	for(auto& bullet : playerBullets_){ bullet.reset(); }
+	delete collisionManager_;
+	collisionManager_ = nullptr;
 	skydome_.reset();
 }
 
@@ -58,6 +60,9 @@ void GameScene::Initialize() {
 	//
 	wt_.Initialize();
 
+	// 衝突マネージャの作成
+	collisionManager_ = new CollisionManager();
+
 	// レティクルのテクスチャを先に読み込む
 	TextureManager::Load("lockOn.png");
 
@@ -94,7 +99,9 @@ void GameScene::Update() {
 	for(auto& bullet : enemyBullets_) { bullet->Update(); }
 	for(auto& bullet : playerBullets_) { bullet->Update(); }
 
-	CheckCollision();
+	// 当たり判定
+	PushBackColliders();
+	collisionManager_->CheckCollision();
 
 	// デバッグテキストの出力----------------------------------
 #ifdef _DEBUG
@@ -178,22 +185,7 @@ void GameScene::Draw() {
 #pragma endregion
 }
 
-// オブジェクト同士の当たり判定を取る関数
-void GameScene::CheckCollisionPair(Object* obj1, Object* obj2){
-
-	float distance = Length(obj1->GetWorldPos() - obj2->GetWorldPos());
-
-	if(distance <= obj1->GetRadius() + obj2->GetRadius()){
-
-		// 違う属性のときのみ
-		if((obj1->objectType_ & obj2->objectType_) != obj1->objectType_){
-			obj1->OnCollision();
-			obj2->OnCollision();
-		}
-	}
-}
-
-void GameScene::CheckCollision(){
+void GameScene::PushBackColliders(){
 
 	// 衝突判定を取るオブジェクトをひとつにまとめる
 	std::list<Object*>colliders;
@@ -202,18 +194,8 @@ void GameScene::CheckCollision(){
 	for(auto& enemy : enemy_){colliders.push_back(enemy.get());}
 	for(auto& enemyBullet : enemyBullets_){	colliders.push_back(enemyBullet.get());}
 
-	// 対象が1以下のときは判定を取らない
-	if(colliders.size() <= 1){ return; }
-
-	// 総当たりで当たり判定
-	std::list<Object*>::iterator itrA = colliders.begin();
-	for(; itrA != colliders.end(); ++itrA){
-		std::list<Object*>::iterator itrB = itrA;
-		itrB++;
-		for(; itrB != colliders.end(); ++itrB){
-			CheckCollisionPair(*itrA, *itrB);
-		}
-	}
+	// 作成したリストを衝突マネージャに送る
+	collisionManager_->SetColliders(colliders);
 }
 
 void GameScene::UpdateEnemyCommands()

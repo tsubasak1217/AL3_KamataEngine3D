@@ -63,7 +63,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)2d;$(ProjectDir)3d;$(ProjectDir)audio;$(ProjectDir)base;$(ProjectDir)input;$(ProjectDir)scene;$(ProjectDir)math;$(ProjectDir)game;$(ProjectDir)math\Func;$(ProjectDir)config\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)2d;$(ProjectDir)3d;$(ProjectDir)audio;$(ProjectDir)base;$(ProjectDir)input;$(ProjectDir)scene;$(ProjectDir)math;$(ProjectDir)game;$(ProjectDir)math\Func;$(ProjectDir)config\;$(ProjectDir)manager\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
@@ -119,6 +119,7 @@
     <ClCompile Include="game\skydome.cpp" />
     <ClCompile Include="game\TimedCall.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="manager\CollisionManager.cpp" />
     <ClCompile Include="math\Func\Easing.cpp" />
     <ClCompile Include="math\Func\MyFunc.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="game\skydome.h" />
     <ClInclude Include="game\TimedCall.h" />
     <ClInclude Include="input\Input.h" />
+    <ClInclude Include="manager\CollisionManager.h" />
     <ClInclude Include="math\Func\Easing.h" />
     <ClInclude Include="math\Func\MyFunc.h" />
     <ClInclude Include="math\Matrix2x2.h" />

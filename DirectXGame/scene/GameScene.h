@@ -12,6 +12,7 @@
 #include "skydome.h"
 #include "railCamera.h"
 #include "Bullet.h"
+#include "CollisionManager.h"
 
 class Player;
 class Enemy;
@@ -86,9 +87,11 @@ private: // メンバ変数
 	bool isWait_;
 	int32_t waitTimer_;
 
+	// 衝突マネージャ
+	CollisionManager* collisionManager_ = nullptr;
+
 private:
-	void CheckCollisionPair(Object* obj1,Object* obj2);
-	void CheckCollision();
+	void PushBackColliders();
 	void LoadEnemyCommands(std::string filePath);
 	void UpdateEnemyCommands();
 

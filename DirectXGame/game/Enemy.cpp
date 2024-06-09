@@ -35,6 +35,9 @@ void Enemy::Init() {
 	isAlive_ = true;
 	shotInterval_ = 60;
 	GH_ = TextureManager::Load("symmetryORE_STRONG.jpg");
+
+	//
+	objectType_ = 0b10;
 }
 
 void Enemy::Update() {

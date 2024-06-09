@@ -54,7 +54,7 @@ void GameScene::Initialize() {
 	LoadEnemyCommands("Resources/enemyAction.csv");
 	isWait_ = false;
 	waitTimer_ = 0;
-	
+
 	//
 	wt_.Initialize();
 
@@ -184,29 +184,34 @@ void GameScene::CheckCollisionPair(Object* obj1, Object* obj2){
 	float distance = Length(obj1->GetWorldPos() - obj2->GetWorldPos());
 
 	if(distance <= obj1->GetRadius() + obj2->GetRadius()){
-		obj1->OnCollision();
-		obj2->OnCollision();
+
+		// 違う属性のときのみ
+		if((obj1->objectType_ & obj2->objectType_) != obj1->objectType_){
+			obj1->OnCollision();
+			obj2->OnCollision();
+		}
 	}
 }
 
 void GameScene::CheckCollision(){
 
-	// 敵弾と自分
-	for(auto& bullet : enemyBullets_){
-		CheckCollisionPair(bullet.get(), player_);
-	}
+	// 衝突判定を取るオブジェクトをひとつにまとめる
+	std::list<Object*>colliders;
+	colliders.push_back(player_);
+	for(auto& playerBullet : playerBullets_){colliders.push_back(playerBullet.get());}
+	for(auto& enemy : enemy_){colliders.push_back(enemy.get());}
+	for(auto& enemyBullet : enemyBullets_){	colliders.push_back(enemyBullet.get());}
 
-	// 自弾と敵
-	for(auto& bullet : playerBullets_){
-		for(auto& enemy : enemy_){
-			CheckCollisionPair(bullet.get(), enemy.get());
-		}
-	}
+	// 対象が1以下のときは判定を取らない
+	if(colliders.size() <= 1){ return; }
 
-	// 自弾と敵弾
-	for(auto& playerBullet : playerBullets_){
-		for(auto& enemyBullet : enemyBullets_){
-			CheckCollisionPair(enemyBullet.get(), playerBullet.get());
+	// 総当たりで当たり判定
+	std::list<Object*>::iterator itrA = colliders.begin();
+	for(; itrA != colliders.end(); ++itrA){
+		std::list<Object*>::iterator itrB = itrA;
+		itrB++;
+		for(; itrB != colliders.end(); ++itrB){
+			CheckCollisionPair(*itrA, *itrB);
 		}
 	}
 }
@@ -285,10 +290,12 @@ void GameScene::AddEnemyBullet(Bullet* bullet)
 {
 	enemyBullets_.push_back(std::make_unique<Bullet>());
 	enemyBullets_.back().reset(bullet);
+	enemyBullets_.back()->objectType_ = 0b10;
 }
 
 void GameScene::AddPlayerBullet(Bullet* bullet)
 {
 	playerBullets_.push_back(std::make_unique<Bullet>());
 	playerBullets_.back().reset(bullet);
+	playerBullets_.back()->objectType_ = 0b1;
 }

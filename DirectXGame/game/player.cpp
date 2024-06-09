@@ -49,6 +49,9 @@ void Player::Init() {
 	GH_ = TextureManager::Load("uvChecker.png");
 
 	shootColltime_ = 0;
+
+	//
+	objectType_ = 0b1;
 }
 
 void Player::Update(const ViewProjection& vp) {

@@ -39,6 +39,10 @@ protected:
 	int GH_;
 
 public:
+	// 
+	uint32_t objectType_;
+
+public:
 	WorldTransform& GetWorldTransform() { return wt_; }
 	Vector3 GetWorldPos()const{ return worldPos_; }
 	Model* GetModel() { return model_; }

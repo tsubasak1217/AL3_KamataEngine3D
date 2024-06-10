@@ -1,4 +1,5 @@
 #include "MyFunc.h"
+#include "PrimitiveDrawer.h"
 
 //何もしない関数
 void Void() { ; }
@@ -266,18 +267,25 @@ float negaZero(float num) {
 	return (num < 0) ? 0 : num;
 }
 
+int Clamp(int num, int min, int max){
+
+	if(num < min){ return min; }
+	if(num > max){ return max; }
+	return num;
+}
+
 Vector3 Slerp(const Vector3& startVec, const Vector3& endVec, float t)
 {
 	// 正規化する
 	Vector3 start = Normalize(startVec);
 	Vector3 end = Normalize(endVec);
 
-	float cos = std::clamp(Dot(start, end),-1.0f,1.0f);// 正規化ベクトル同士の内積なのでcosθの値が出る
+	float cos = std::clamp(Dot(start, end), -1.0f, 1.0f);// 正規化ベクトル同士の内積なのでcosθの値が出る
 	float theta = std::acos(cos);// cosθからθを算出
 	float sin = std::sin(theta);// sinθの値を計算
 
 	// sinが0の場合、startとendが同じベクトルであるのでリターン
-	if(sin == 0.0f){return start;}
+	if(sin == 0.0f){ return start; }
 
 	t = std::clamp(t, 0.0f, 1.0f);// 媒介変数を0~1に収める
 
@@ -1402,6 +1410,108 @@ int IsHitBox_BallDirection(Vector2 boxCenter, Vector2 ballPos, Vector2 boxSize, 
 	}
 }
 
+//================================================================
+//                     描画に関わる関数
+//================================================================
+
+// ---------------スプライン曲線の頂点計算用の関数---------------------
+Vector2 Complement(const Vector2& p1, const Vector2& p2, const Vector2& p3, const Vector2& p4, float t) {
+	return(
+		(p1.operator*(-1.0f) + p2.operator*(3.0f) - p3.operator*(3.0f) + p4).operator*(t * t * t) +
+		(p1.operator*(2.0f) - p2.operator*(5.0f) + p3.operator*(4.0f) - p4).operator*(t * t) +
+		(p1.operator*(-1.0f) + p3).operator*(t) +
+		p2.operator*(2.0f)
+		).operator*(0.5f);
+}
+
+Vector2 CatmullRom(const Vector2& p1, const Vector2& p2, const Vector2& p3, const Vector2& p4, float t) {
+
+	t = std::clamp(t, 0.0f, 1.0f);// tを0~1に収める
+
+	if(t >= 0.0f && t < 0.33f) {// 1/3
+		return Complement(p1, p1, p2, p3, t / 0.33f);
+
+	} else if(t >= 0.33f && t < 0.66f) {// 2/3
+		return Complement(p1, p2, p3, p4, (t - 0.33f) / 0.33f);
+
+	} else {// 3/3
+		return Complement(p2, p3, p4, p4, (t - 0.66f) / 0.34f);
+	}
+}
+
+Vector3 CatmullRom(const Vector3& p1, const Vector3& p2, const Vector3& p3, const Vector3& p4, float t){
+
+	t = std::clamp(t, 0.0f, 1.0f);// tを0~1に収める
+
+	// 二次元の平面に分解
+	Vector2 xy[4] = {
+		{p1.x,p1.y},
+		{p2.x,p2.y},
+		{p3.x,p3.y},
+		{p4.x,p4.y}
+	};
+
+	Vector2 zy[4] = {
+		{p1.z,p1.y},
+		{p2.z,p2.y},
+		{p3.z,p3.y},
+		{p4.z,p4.y}
+	};
+
+	// 結果を格納す変数
+	Vector2 xyResult;
+	Vector2 zyResult;
+	Vector3 result;
+
+	// tの値に応じて座標を計算
+	if(t >= 0.0f && t < 0.33f) {// 1/3
+		xyResult = Complement(xy[0], xy[0], xy[1], xy[2], t / 0.33f);
+		zyResult = Complement(zy[0], zy[0], zy[1], zy[2], t / 0.33f);
+
+	} else if(t >= 0.33f && t < 0.66f) {// 2/3
+		xyResult = Complement(xy[0], xy[1], xy[2], xy[3], (t - 0.33f) / 0.33f);
+		zyResult = Complement(zy[0], zy[1], zy[2], zy[3], (t - 0.33f) / 0.33f);
+
+	} else {// 3/3
+		xyResult = Complement(xy[1], xy[2], xy[3], xy[3], (t - 0.66f) / 0.34f);
+		zyResult = Complement(zy[1], zy[2], zy[3], zy[3], (t - 0.66f) / 0.34f);
+	}
+
+	// 三次元にする
+	result = { xyResult.x,xyResult.y,zyResult.x };
+
+	return result;
+}
+
+void DrawSpline3D(std::list<Vector3> controlPoints, int32_t subdivision){
+
+	std::vector<Vector3>drawPoints;
+	std::list<Vector3> tmpControlPoints = controlPoints;
+
+	// 要素数が3の倍数+1になるまで最後の要素をコピーして追加
+	while(tmpControlPoints.size() % 3 != 1){
+		tmpControlPoints.push_back(tmpControlPoints.back());
+	}
+
+	// 4点ずつ見ていく
+	auto itr = tmpControlPoints.begin();
+	for(; std::distance(itr, tmpControlPoints.end()) > 3; itr = std::next(itr, 3)){
+		for(int32_t j = 0; j <= subdivision * 3; j++){
+
+			float t = float(j) / float(subdivision);
+
+			drawPoints.push_back(
+				CatmullRom(*itr, *std::next(itr, 1), *std::next(itr, 2), *std::next(itr, 3), t)
+			);
+		}
+	}
+
+	// 描画
+	for(int32_t i = 0; i < drawPoints.size() - 1; i++){
+		PrimitiveDrawer::GetInstance()->DrawLine3d(drawPoints[i], drawPoints[i + 1], { 1.0f,0.0f,0.0f,1.0f });
+	}
+}
+
 
 //================================================================
 //                     色を扱う関数
@@ -1471,3 +1581,4 @@ int GrayScale(int color) {
 
 	return 0xFF + (gray << 24) + (gray << 16) + (gray << 8);
 };
+

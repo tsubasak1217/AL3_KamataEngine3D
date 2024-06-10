@@ -22,6 +22,13 @@ void RailCamera::Init(Vector3 pos, Vector3 rotate)
 	moveVec_ = {0.0f,0.0f,1.0f};
 	moveSpeed_ = 0.125f; 
 	rotate_ = {0.0f,0.0f,0.0f};
+
+	controlPoints_.push_back({ 0.0f,  0.0f,  0.0f });
+	controlPoints_.push_back({ 10.0f, 10.0f, 0.0f });
+	controlPoints_.push_back({ 10.0f, 15.0f, 0.0f });
+	controlPoints_.push_back({ 20.0f, 15.0f, 0.0f });
+	controlPoints_.push_back({ 20.0f, 0.0f,  0.0f });
+	controlPoints_.push_back({ 30.0f, 0.0f,  0.0f });
 }
 
 void RailCamera::Update()
@@ -42,6 +49,10 @@ void RailCamera::Update()
 
 	vp_.matView = InverseMatrix(wt_.matWorld_);
 	vp_.TransferMatrix();
+}
+
+void RailCamera::Draw(){
+	DrawSpline3D(controlPoints_, 64);
 }
 
 void RailCamera::Fin()

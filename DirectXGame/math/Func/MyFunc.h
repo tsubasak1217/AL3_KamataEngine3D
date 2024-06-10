@@ -8,6 +8,8 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <list>
+#include <iterator>
 #include <algorithm>
 #include "Easing.h"
 #include "Vector2.h"
@@ -83,6 +85,9 @@ void ShiftLineCtrl(Vector2& pos1, Vector2& pos2, float distance);
 // 負数を0に変換する関数
 int negaZero(int num);
 float negaZero(float num);
+
+// clamp
+int Clamp(int num, int min, int max);
 
 // Lerp
 Vector3 Slerp(const Vector3& startVec, const Vector3& endVec, float t);
@@ -194,6 +199,13 @@ int IsHitBox_BallDirection(Vector2 boxCenter, Vector2 ballPos, Vector2 boxSize, 
 //================================================================
 //                     オリジナル描画関数
 //================================================================
+
+// ---------------スプライン曲線の頂点計算用の関数---------------------
+Vector2 Complement(const Vector2& p1, const Vector2& p2, const Vector2& p3, const Vector2& p4, float t);
+Vector2 CatmullRom(const Vector2& p1, const Vector2& p2, const Vector2& p3, const Vector2& p4, float t);
+Vector3 CatmullRom(const Vector3& p1, const Vector3& p2, const Vector3& p3, const Vector3& p4, float t);
+
+void DrawSpline3D(std::list<Vector3>controlPoints, int32_t subdivision);
 
 //================================================================
 //                     色を扱う関数

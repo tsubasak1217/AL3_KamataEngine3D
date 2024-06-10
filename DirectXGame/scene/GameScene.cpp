@@ -69,6 +69,7 @@ void GameScene::Initialize() {
 	//
 	AxisIndicator::SetVisible(true);
 	AxisIndicator::SetTargetViewProjection(railCamera_->GetViewProjection());
+	PrimitiveDrawer::GetInstance()->SetViewProjection(railCamera_->GetViewProjection());
 }
 
 void GameScene::Update() {
@@ -102,7 +103,7 @@ void GameScene::Update() {
 	// 当たり判定
 	PushBackColliders();
 	collisionManager_->CheckCollision();
-
+	
 	// デバッグテキストの出力----------------------------------
 #ifdef _DEBUG
 
@@ -152,6 +153,7 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 
+	
 	skydome_->Draw(*railCamera_->GetViewProjection());// モデルの描画
 	player_->Draw(*railCamera_->GetViewProjection());
 	for(auto& enemy : enemy_){ enemy->Draw(*railCamera_->GetViewProjection()); }
@@ -161,6 +163,8 @@ void GameScene::Draw() {
 	for(auto& bullet : playerBullets_) {
 		bullet->Draw(*railCamera_->GetViewProjection());
 	}
+
+	railCamera_->Draw();
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

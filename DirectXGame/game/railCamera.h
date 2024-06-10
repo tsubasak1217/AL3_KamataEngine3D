@@ -2,7 +2,7 @@
 #include "WorldTransform.h"
 #include "ViewProjection.h"
 #include "Vector3.h"
-#include <list>
+#include <vector>
 
 class RailCamera{
 public:
@@ -21,7 +21,7 @@ private:
 	Vector3 rotate_;
 
 	// 制御点
-	std::list<Vector3>controlPoints_;
+	std::vector<Vector3>controlPoints_;
 
 public:
 	ViewProjection* GetViewProjection(){ return &vp_; }

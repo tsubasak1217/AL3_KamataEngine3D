@@ -204,8 +204,11 @@ int IsHitBox_BallDirection(Vector2 boxCenter, Vector2 ballPos, Vector2 boxSize, 
 Vector2 Complement(const Vector2& p1, const Vector2& p2, const Vector2& p3, const Vector2& p4, float t);
 Vector2 CatmullRom(const Vector2& p1, const Vector2& p2, const Vector2& p3, const Vector2& p4, float t);
 Vector3 CatmullRom(const Vector3& p1, const Vector3& p2, const Vector3& p3, const Vector3& p4, float t);
+Vector3 CatmullRom(const std::vector<Vector3>& controlPoints, float t);
+Vector3 PrimaryCatmullRom(const Vector3& p1, const Vector3& p2, const Vector3& p3, const Vector3& p4, float t);
 
-void DrawSpline3D(std::list<Vector3>controlPoints, int32_t subdivision);
+// 描画
+void DrawSpline3D(const std::vector<Vector3>& controlPoints, int32_t subdivision);
 
 //================================================================
 //                     色を扱う関数

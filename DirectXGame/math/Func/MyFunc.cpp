@@ -1439,6 +1439,7 @@ Vector2 CatmullRom(const Vector2& p1, const Vector2& p2, const Vector2& p3, cons
 	}
 }
 
+
 Vector3 CatmullRom(const Vector3& p1, const Vector3& p2, const Vector3& p3, const Vector3& p4, float t){
 
 	t = std::clamp(t, 0.0f, 1.0f);// tを0~1に収める
@@ -1483,25 +1484,85 @@ Vector3 CatmullRom(const Vector3& p1, const Vector3& p2, const Vector3& p3, cons
 	return result;
 }
 
-void DrawSpline3D(std::list<Vector3> controlPoints, int32_t subdivision){
+Vector3 CatmullRom(const std::vector<Vector3>& controlPoints, float t)
+{
+	Vector3 result;
+	std::vector<Vector3> tmpControlPoints = controlPoints;
+	int size = int(tmpControlPoints.size() - 1);
+	float width = 1.0f / size;
+	float t2 = std::fmod(t, width) / width;
+	int idx = int((t / 1.0f) * size);
+
+	// 要素数が必要数に達するまでコピーして追加
+	while(tmpControlPoints.size() < 4){
+		tmpControlPoints.push_back(tmpControlPoints.back());
+	}
+
+	result = PrimaryCatmullRom(
+		tmpControlPoints[Clamp(idx - 1, 0, size)],
+		tmpControlPoints[idx],
+		tmpControlPoints[Clamp(idx + 1, 0, size)],
+		tmpControlPoints[Clamp(idx + 2, 0, size)],
+		t2
+	);
+
+	return result;
+}
+
+Vector3 PrimaryCatmullRom(const Vector3& p1, const Vector3& p2, const Vector3& p3, const Vector3& p4, float t){
+	t = std::clamp(t, 0.0f, 1.0f);// tを0~1に収める
+	Vector2 xyResult;
+	Vector2 zyResult;
+	Vector3 result;
+
+	// 二次元の平面に分解
+	Vector2 xy[4] = {
+		{p1.x,p1.y},
+		{p2.x,p2.y},
+		{p3.x,p3.y},
+		{p4.x,p4.y}
+	};
+
+	Vector2 zy[4] = {
+		{p1.z,p1.y},
+		{p2.z,p2.y},
+		{p3.z,p3.y},
+		{p4.z,p4.y}
+	};
+
+	xyResult = Complement(xy[0], xy[1], xy[2], xy[3], t);
+	zyResult = Complement(zy[0], zy[1], zy[2], zy[3], t);
+	// 三次元にする
+	result = { xyResult.x,xyResult.y,zyResult.x };
+
+	return result;
+}
+
+void DrawSpline3D(const std::vector<Vector3>& controlPoints, int32_t subdivision){
 
 	std::vector<Vector3>drawPoints;
-	std::list<Vector3> tmpControlPoints = controlPoints;
+	std::vector<Vector3> tmpControlPoints = controlPoints;
+	int size = int(tmpControlPoints.size() - 1);
 
-	// 要素数が3の倍数+1になるまで最後の要素をコピーして追加
-	while(tmpControlPoints.size() % 3 != 1){
+	// 要素数が必要数に達するまでコピーして追加
+	while(tmpControlPoints.size() < 4){
 		tmpControlPoints.push_back(tmpControlPoints.back());
 	}
 
 	// 4点ずつ見ていく
-	auto itr = tmpControlPoints.begin();
-	for(; std::distance(itr, tmpControlPoints.end()) > 3; itr = std::next(itr, 3)){
-		for(int32_t j = 0; j <= subdivision * 3; j++){
+	for(int idx = 0; idx <= size; idx++){
+		for(int32_t j = 0; j <= subdivision; j++){
 
 			float t = float(j) / float(subdivision);
 
 			drawPoints.push_back(
-				CatmullRom(*itr, *std::next(itr, 1), *std::next(itr, 2), *std::next(itr, 3), t)
+				PrimaryCatmullRom(
+					tmpControlPoints[Clamp(idx - 1,0,size)],
+					tmpControlPoints[idx],
+					tmpControlPoints[Clamp(idx + 1,0,size)],
+					tmpControlPoints[Clamp(idx + 2,0,size)],
+					t
+				)
 			);
 		}
 	}

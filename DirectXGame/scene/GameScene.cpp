@@ -50,7 +50,7 @@ void GameScene::Initialize() {
 
 	// デバックカメラ
 	dc_ = new DebugCamera(1280, 720);
-	isDebugCameraActive_ = false;
+	isDebugCameraActive_ = true;
 
 	// 敵の行動コマンド
 	LoadEnemyCommands("Resources/enemyAction.csv");

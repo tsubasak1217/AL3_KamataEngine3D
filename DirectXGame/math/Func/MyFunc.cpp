@@ -1484,19 +1484,21 @@ Vector3 CatmullRom(const Vector3& p1, const Vector3& p2, const Vector3& p3, cons
 	return result;
 }
 
-Vector3 CatmullRom(const std::vector<Vector3>& controlPoints, float t)
-{
+Vector3 CatmullRom(const std::vector<Vector3>& controlPoints, float t){
+
+	t = std::clamp(t, 0.0f, 1.0f);// tを0~1に収める
+
 	Vector3 result;
 	std::vector<Vector3> tmpControlPoints = controlPoints;
-	int size = int(tmpControlPoints.size() - 1);
-	float width = 1.0f / size;
-	float t2 = std::fmod(t, width) / width;
-	int idx = int((t / 1.0f) * size);
-
 	// 要素数が必要数に達するまでコピーして追加
 	while(tmpControlPoints.size() < 4){
 		tmpControlPoints.push_back(tmpControlPoints.back());
 	}
+
+	int size = int(tmpControlPoints.size() - 1);
+	float width = 1.0f / size;
+	float t2 = std::fmod(t, width) / width;
+	int idx = int(t / width);
 
 	result = PrimaryCatmullRom(
 		tmpControlPoints[Clamp(idx - 1, 0, size)],

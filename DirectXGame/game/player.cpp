@@ -76,6 +76,7 @@ void Player::Update(const ViewProjection& vp) {
 void Player::Draw(const ViewProjection& vp) {
 
 	model_->Draw(wt_, vp, GH_);
+	model_->Draw(*wt_.parent_, vp, GH_);
 }
 
 // レティクルの描画

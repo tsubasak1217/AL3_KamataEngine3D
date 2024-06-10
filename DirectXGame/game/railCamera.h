@@ -22,6 +22,10 @@ private:
 
 	// 制御点
 	std::vector<Vector3>controlPoints_;
+	Vector3 targetPoint_;
+	float rail_t_ = 0.0f;
+	float addRate_;
+	float targetDistance_;
 
 public:
 	ViewProjection* GetViewProjection(){ return &vp_; }

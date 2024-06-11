@@ -18,6 +18,7 @@ void RailCamera::Init(Vector3 pos, Vector3 rotate)
 	wt_.Initialize();
 	wt_.translation_ = pos;
 	wt_.rotation_ = rotate;
+	viewWt_.Initialize();
 	vp_.Initialize();
 
 	moveVec_ = { 0.0f,0.0f,1.0f };
@@ -26,11 +27,13 @@ void RailCamera::Init(Vector3 pos, Vector3 rotate)
 
 	// 制御点
 	controlPoints_.push_back({ 0.0f,  0.0f,  0.0f });
-	controlPoints_.push_back({ 10.0f, 10.0f, 5.0f });
-	controlPoints_.push_back({ 10.0f, 15.0f, 10.0f });
-	controlPoints_.push_back({ 20.0f, 15.0f, 5.0f });
-	controlPoints_.push_back({ 20.0f, 0.0f,  -5.0f });
-	controlPoints_.push_back({ 30.0f, 0.0f,  0.0f });
+	controlPoints_.push_back({ 50.0f, 50.0f, 25.0f });
+	controlPoints_.push_back({ 50.0f, 75.0f, 50.0f });
+	controlPoints_.push_back({ 100.0f, 75.0f, 25.0f });
+	controlPoints_.push_back({ 100.0f, 0.0f,  -25.0f });
+	controlPoints_.push_back({ 150.0f, 0.0f,  0.0f });
+	controlPoints_.push_back({ 50.0f,  -30.0f,  0.0f });
+	controlPoints_.push_back({ 0.0f,  0.0f,  0.0f });
 
 	rail_t_ = 0.0f;
 	targetDistance_ = 0.02f;
@@ -48,6 +51,11 @@ void RailCamera::Init(Vector3 pos, Vector3 rotate)
 	std::atan2(dif.x, dif.z),// 横方向の回転角(Y軸回り)
 	0.0f
 	};
+
+	// レール位置を引きで見る
+	viewWt_.translation_ = wt_.translation_ - (dif * 20.0f);
+	viewWt_.rotation_ = wt_.rotation_;
+	viewWt_.scale_ = wt_.scale_;
 }
 
 void RailCamera::Update()
@@ -78,14 +86,22 @@ void RailCamera::Update()
 	0.0f
 	};
 
+	// レール位置を引きで見る
+	viewWt_.translation_ = wt_.translation_ - (dif * 20.0f);
+	viewWt_.rotation_ = wt_.rotation_;
+	viewWt_.scale_ = wt_.scale_;
+	viewWt_.UpdateMatrix();
+
 	//wt_.translation_ += moveVec_ * moveSpeed_;
 	wt_.rotation_ += rotate_;
 	wt_.UpdateMatrix();
 
-	vp_.matView = InverseMatrix(wt_.matWorld_);
+
+	vp_.matView = InverseMatrix(viewWt_.matWorld_);
 	vp_.TransferMatrix();
 
 	rail_t_ += addRate_;
+	if(rail_t_ > 1.0f){ rail_t_ = 0.0f; }
 }
 
 void RailCamera::Draw(){

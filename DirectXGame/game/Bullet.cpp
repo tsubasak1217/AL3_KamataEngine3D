@@ -20,7 +20,7 @@ Bullet::~Bullet() { Fin(); }
 void Bullet::Init() {
 	model_ = Model::Create();
 	radius_ = 2.0f;
-	scale_ = {0.5f, 0.5f, 3.0f};
+	scale_ = {0.5f, 0.5f, 0.5f};
 	rotate_ = {0.0f, 0.0f, 0.0f};
 	moveVec_ = {0.0f, 0.0f, 1.0f};
 	GH_ = TextureManager::Load("uvChecker.png");

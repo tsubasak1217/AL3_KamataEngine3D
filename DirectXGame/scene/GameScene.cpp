@@ -15,12 +15,10 @@ GameScene::~GameScene() {
 	sprite_ = nullptr;
 	delete dc_;
 	dc_ = nullptr;
-	railCamera_.reset();
-	for(auto& enemy : enemy_){ enemy.reset(); }
 	delete player_;
 	player_ = nullptr;
-	for(auto& bullet : enemyBullets_){ bullet.reset(); }
-	for(auto& bullet : playerBullets_){ bullet.reset(); }
+	railCamera_.reset();
+	for(auto& enemy : enemy_){ enemy.reset(); }
 	delete collisionManager_;
 	collisionManager_ = nullptr;
 	skydome_.reset();
@@ -38,6 +36,8 @@ void GameScene::Initialize() {
 
 	// 天球
 	skydome_.reset(new Skydome());
+	for(auto& bullet : enemyBullets_){ bullet.reset(); }
+	for(auto& bullet : playerBullets_){ bullet.reset(); }
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
@@ -50,7 +50,7 @@ void GameScene::Initialize() {
 
 	// デバックカメラ
 	dc_ = new DebugCamera(1280, 720);
-	isDebugCameraActive_ = true;
+	isDebugCameraActive_ = false;
 
 	// 敵の行動コマンド
 	LoadEnemyCommands("Resources/enemyAction.csv");
@@ -276,6 +276,7 @@ void GameScene::AddEnemyBullet(Bullet* bullet)
 {
 	enemyBullets_.push_back(std::make_unique<Bullet>());
 	enemyBullets_.back().reset(bullet);
+	enemyBullets_.back()->SetScale({0.5f,0.5f,3.0f});
 	enemyBullets_.back()->objectType_ = 0b10;
 }
 

@@ -33,4 +33,5 @@ public:
 public:
 	const bool GetIsAlive()const { return deathTimer_ > 0; }
 	void SetHomingObject(Object* objectPtr){ homingObjectPtr_ = objectPtr; }
+	void SetScale(const Vector3& scale){ scale_ = scale; }
 };

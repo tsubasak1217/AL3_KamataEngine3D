@@ -26,7 +26,7 @@ void Player::Init() {
 	model_ = new Model();
 
 	wt_.Initialize();
-	wt_.translation_ = { 0.0f,0.0f,20.0f };
+	wt_.translation_ = { 0.0f,0.0f,0.0f };
 
 	// レティクルの初期化
 	reticleVec_ = Normalize({ 0.0f,0.0f,1.0f });
@@ -76,7 +76,7 @@ void Player::Update(const ViewProjection& vp) {
 void Player::Draw(const ViewProjection& vp) {
 
 	model_->Draw(wt_, vp, GH_);
-	model_->Draw(*wt_.parent_, vp, GH_);
+	//model_->Draw(*wt_.parent_, vp, GH_);
 }
 
 // レティクルの描画

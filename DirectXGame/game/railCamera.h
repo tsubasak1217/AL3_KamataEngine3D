@@ -15,6 +15,7 @@ public:
 
 private:
 	WorldTransform wt_;
+	WorldTransform viewWt_;
 	ViewProjection vp_;
 	Vector3 moveVec_;
 	float moveSpeed_;

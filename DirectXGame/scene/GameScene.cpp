@@ -27,7 +27,7 @@ GameScene::~GameScene() {
 void GameScene::Initialize() {
 
 	// レールカメラ
-	railCamera_.reset(new RailCamera({ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }));
+	railCamera_.reset(new RailCamera({ 0.0f,0.0f,-20.0f }, { 0.0f,0.0f,0.0f }));
 	// プレイヤー
 	player_ = new Player();
 	player_->SetParentPtr(railCamera_->GetWorldTransform());// レールカメラに追従するよう親子関係を持たせる

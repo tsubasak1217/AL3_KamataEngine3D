@@ -92,7 +92,7 @@ void RailCamera::Update()
 	//viewWt_.scale_ = wt_.scale_;
 	//viewWt_.UpdateMatrix();
 
-	wt_.translation_ += moveVec_ * moveSpeed_;
+	//wt_.translation_ += moveVec_ * moveSpeed_;
 	wt_.rotation_ += rotate_;
 	wt_.UpdateMatrix();
 

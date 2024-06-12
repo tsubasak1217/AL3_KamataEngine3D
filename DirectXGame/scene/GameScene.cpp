@@ -33,6 +33,7 @@ void GameScene::Initialize() {
 	player_->SetParentPtr(railCamera_->GetWorldTransform());// レールカメラに追従するよう親子関係を持たせる
 	player_->SetGameScenePtr(this);// ゲームシーンのポインタを持たせる
 	player_->SetCameraPtr(railCamera_.get());
+	player_->SetViewProjection(railCamera_->GetViewProjection());
 
 	// 天球
 	skydome_.reset(new Skydome());
@@ -92,7 +93,7 @@ void GameScene::Update() {
 	}
 
 	// オブジェクトの更新
-	player_->Update(*railCamera_->GetViewProjection());
+	player_->Update();
 	for(auto& enemy : enemy_){ enemy->Update(); }
 	skydome_->Update();
 
@@ -155,13 +156,13 @@ void GameScene::Draw() {
 
 	
 	skydome_->Draw(*railCamera_->GetViewProjection());// モデルの描画
-	player_->Draw(*railCamera_->GetViewProjection());
-	for(auto& enemy : enemy_){ enemy->Draw(*railCamera_->GetViewProjection()); }
+	player_->Draw();
+	for(auto& enemy : enemy_){ enemy->Draw(); }
 	for(auto& bullet : enemyBullets_) {
-		bullet->Draw(*railCamera_->GetViewProjection());
+		bullet->Draw();
 	}
 	for(auto& bullet : playerBullets_) {
-		bullet->Draw(*railCamera_->GetViewProjection());
+		bullet->Draw();
 	}
 
 	railCamera_->Draw();
@@ -253,6 +254,7 @@ void GameScene::UpdateEnemyCommands()
 			enemy_.back()->SetPlayerPtr(player_);
 			enemy_.back()->SetGameScenePtr(this);// ゲームシーンのポインタを持たせる
 			enemy_.back()->SetModel(Model::Create());
+			enemy_.back()->SetViewProjection(railCamera_->GetViewProjection());
 		}
 	}
 }
@@ -277,6 +279,7 @@ void GameScene::AddEnemyBullet(Bullet* bullet)
 	enemyBullets_.push_back(std::make_unique<Bullet>());
 	enemyBullets_.back().reset(bullet);
 	enemyBullets_.back()->SetScale({0.5f,0.5f,3.0f});
+	enemyBullets_.back()->SetViewProjection(railCamera_->GetViewProjection());
 	enemyBullets_.back()->objectType_ = 0b10;
 }
 
@@ -284,5 +287,6 @@ void GameScene::AddPlayerBullet(Bullet* bullet)
 {
 	playerBullets_.push_back(std::make_unique<Bullet>());
 	playerBullets_.back().reset(bullet);
+	playerBullets_.back()->SetViewProjection(railCamera_->GetViewProjection());
 	playerBullets_.back()->objectType_ = 0b1;
 }

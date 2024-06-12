@@ -11,7 +11,7 @@ void Object::Init() {}
 
 void Object::Update() {}
 
-void Object::Draw(const ViewProjection& vp) { vp; }
+void Object::Draw() {}
 
 void Object::Fin() {}
 

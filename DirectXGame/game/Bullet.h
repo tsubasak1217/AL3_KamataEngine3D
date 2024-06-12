@@ -12,7 +12,7 @@ public:
 	~Bullet();
 	void Init() override;
 	void Update() override;
-	void Draw(const ViewProjection& vp) override;
+	void Draw() override;
 	void Fin() override;
 
 private:

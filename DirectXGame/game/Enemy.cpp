@@ -62,9 +62,9 @@ void Enemy::Update() {
 	wt_.UpdateMatrix();
 }
 
-void Enemy::Draw(const ViewProjection& vp) {
+void Enemy::Draw() {
 
-	model_->Draw(wt_, vp, GH_);
+	model_->Draw(wt_, *vp_, GH_);
 }
 
 void Enemy::AddBullet(){

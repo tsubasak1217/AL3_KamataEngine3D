@@ -31,7 +31,7 @@ void Player::Init() {
 	// レティクルの初期化
 	reticleVec_ = Normalize({ 0.0f,0.0f,1.0f });
 	screenReticlePos_ = kWindowSize * 0.5f;
-	reticleDistance_ = 30.0f;
+	reticleDistance_ = 60.0f;
 	reticleWt_.Initialize();
 	reticleWt_.translation_ =
 		wt_.translation_ + Multiply(reticleVec_, RotateMatrix(wt_.rotation_)) * reticleDistance_;
@@ -54,10 +54,10 @@ void Player::Init() {
 	objectType_ = 0b1;
 }
 
-void Player::Update(const ViewProjection& vp) {
+void Player::Update() {
 
 	// 弾の発射
-	Shoot(vp);
+	Shoot();
 
 	// 移動量の決定
 	Translate();
@@ -73,9 +73,9 @@ void Player::Update(const ViewProjection& vp) {
 	reticleWt_.UpdateMatrix();
 }
 
-void Player::Draw(const ViewProjection& vp) {
+void Player::Draw() {
 
-	model_->Draw(wt_, vp, GH_);
+	model_->Draw(wt_, *vp_, GH_);
 	//model_->Draw(*wt_.parent_, vp, GH_);
 }
 
@@ -101,7 +101,7 @@ void Player::DrawReticle()
 	reticleSprite_->Draw();
 }
 
-void Player::Shoot(const ViewProjection& vp) {
+void Player::Shoot() {
 
 	// 発射クールタイムの更新
 	if(shootColltime_ > 0){
@@ -113,7 +113,7 @@ void Player::Shoot(const ViewProjection& vp) {
 	/*------------------------------------------*/
 
 	// 必要な行列の作成
-	Matrix4x4 matVPV = Multiply(vp.matView, vp.matProjection);
+	Matrix4x4 matVPV = Multiply(vp_->matView, vp_->matProjection);
 	matVPV = Multiply(matVPV, ViewportMatrix(kWindowSize, { 0.0f,0.0f, }, 0.0f, 1000.0f));
 	Matrix4x4 inverseVPV = InverseMatrix(matVPV);
 

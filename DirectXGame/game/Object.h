@@ -3,6 +3,7 @@
 #include "TextureManager.h"
 #include "Vector3.h"
 #include "WorldTransform.h"
+#include "ViewProjection.h"
 
 class Object {
 
@@ -11,7 +12,7 @@ public:
 	~Object();
 	virtual void Init();
 	virtual void Update();
-	virtual void Draw(const ViewProjection& vp);
+	virtual void Draw();
 	virtual void Fin();
 
 protected:
@@ -30,10 +31,13 @@ protected:
 
 	// 最終的なワールド空間上の座標
 	Vector3 worldPos_;
+	// 最終的なスクリーン座標
+	Vector3 screenPos_;
 
 	//
 	Model* model_ = nullptr;
 	WorldTransform wt_;
+	ViewProjection* vp_;
 
 	//
 	int GH_;
@@ -44,7 +48,9 @@ public:
 
 public:
 	WorldTransform& GetWorldTransform() { return wt_; }
+	void SetViewProjection(ViewProjection* vp){ vp_ = vp; }
 	Vector3 GetWorldPos()const{ return worldPos_; }
+	Vector3 GetScreenPos()const{ return screenPos_; }
 	Model* GetModel() { return model_; }
 	void SetModel(Model* model) { model_ = model; }
 	float GetRadius()const{ return radius_; }

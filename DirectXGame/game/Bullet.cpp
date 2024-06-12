@@ -54,7 +54,7 @@ void Bullet::Update() {
 	wt_.UpdateMatrix();
 }
 
-void Bullet::Draw(const ViewProjection& vp) { model_->Draw(wt_, vp, GH_); }
+void Bullet::Draw() { model_->Draw(wt_, *vp_, GH_); }
 
 void Bullet::Fin() {
 	delete model_;

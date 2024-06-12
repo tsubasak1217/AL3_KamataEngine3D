@@ -17,8 +17,8 @@ public:
 	~Player();
 
 	void Init() override;
-	void Update(const ViewProjection& vp);
-	void Draw(const ViewProjection& vp) override;
+	void Update();
+	void Draw() override;
 	void DrawReticle();
 
 private:
@@ -38,7 +38,7 @@ private:
 	RailCamera* railcamera_ = nullptr;
 
 private: // メンバ関数
-	void Shoot(const ViewProjection& vp);
+	void Shoot();
 	void Rotate();
 	void Translate();
 	void Move();

@@ -27,7 +27,7 @@ public:
 
 	void Init() override;
 	void Update() override;
-	void Draw(const ViewProjection& vp) override;
+	void Draw() override;
 
 private:// 外部参照のためのポインタ変数
 	Player* playerPtr_ = nullptr;

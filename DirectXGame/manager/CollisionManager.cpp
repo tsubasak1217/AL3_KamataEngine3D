@@ -1,5 +1,7 @@
 ﻿#include "CollisionManager.h"
 #include "MyFunc.h"
+#include "Enemy.h"
+#include "Player.h"
 
 void CollisionManager::CheckCollisionPair(Object* obj1, Object* obj2){
 
@@ -12,6 +14,19 @@ void CollisionManager::CheckCollisionPair(Object* obj1, Object* obj2){
 		if((obj1->objectType_ & obj2->objectType_) != obj1->objectType_){
 			obj1->OnCollision();
 			obj2->OnCollision();
+		}
+	}
+}
+
+void CollisionManager::CheckReticleCollision()
+{
+	// レティクルと敵の距離を測りロックオン処理
+	pPlayer_->SetIsLockOn(false);
+	for(auto& enemy : *pEnemy_){
+		float distance = Length(enemy->GetScreenPos() - pPlayer_->GetReticlePos());
+
+		if(distance < 50.0f){
+			pPlayer_->LockOn(enemy.get());
 		}
 	}
 }
@@ -34,4 +49,6 @@ void CollisionManager::CheckCollision(){
 			CheckCollisionPair(*itrA, *itrB);
 		}
 	}
+
+	CheckReticleCollision();
 }

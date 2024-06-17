@@ -7,6 +7,7 @@
 #include "MyFunc.h"
 #include "player.h"
 #include "Enemy.h"
+#include "CollisionManager.h"
 
 GameScene::GameScene() {}
 
@@ -26,6 +27,8 @@ GameScene::~GameScene() {
 
 void GameScene::Initialize() {
 
+	// 衝突マネージャの作成
+	collisionManager_ = new CollisionManager();
 	// レールカメラ
 	railCamera_.reset(new RailCamera({ 0.0f,0.0f,-20.0f }, { 0.0f,0.0f,0.0f }));
 	// プレイヤー
@@ -34,6 +37,7 @@ void GameScene::Initialize() {
 	player_->SetGameScenePtr(this);// ゲームシーンのポインタを持たせる
 	player_->SetCameraPtr(railCamera_.get());
 	player_->SetViewProjection(railCamera_->GetViewProjection());
+	collisionManager_->pPlayer_ = player_;
 
 	// 天球
 	skydome_.reset(new Skydome());
@@ -60,9 +64,6 @@ void GameScene::Initialize() {
 
 	//
 	wt_.Initialize();
-
-	// 衝突マネージャの作成
-	collisionManager_ = new CollisionManager();
 
 	// レティクルのテクスチャを先に読み込む
 	TextureManager::Load("lockOn.png");
@@ -201,6 +202,7 @@ void GameScene::PushBackColliders(){
 
 	// 作成したリストを衝突マネージャに送る
 	collisionManager_->SetColliders(colliders);
+	collisionManager_->pEnemy_ = &enemy_;
 }
 
 void GameScene::UpdateEnemyCommands()

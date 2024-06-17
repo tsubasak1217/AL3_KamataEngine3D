@@ -54,12 +54,8 @@ void Enemy::Update() {
 	// 回転量の決定
 	Rotate();
 
-
 	// 実際に移動
 	Move();
-
-	// ワールド行列の作成
-	wt_.UpdateMatrix();
 }
 
 void Enemy::Draw() {
@@ -95,8 +91,13 @@ void Enemy::Move() {
 	wt_.translation_ += moveVec_ * moveSpeed_;
 	wt_.rotation_ = rotate_;
 
+	// ワールド行列の作成,転送
+	wt_.UpdateMatrix();
 	// ワールド座標の更新
 	worldPos_ = wt_.translation_;
+	// スクリーン座標の更新
+	screenPos_ = Multiply({ 0.0f,0.0f,0.0f }, Multiply(wt_.matWorld_, Multiply(vp_->matView,vp_->matProjection)));
+	screenPos_ = Multiply(screenPos_, ViewportMatrix({ 1280.0f,720.0f }, {0.0f,0.0f},0.01f,100.0f));
 }
 
 void Enemy::Fire(){

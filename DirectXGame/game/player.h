@@ -7,6 +7,7 @@
 #include "railCamera.h"
 #include "sprite.h"
 
+class Enemy;
 class GameScene;
 
 class Player : public Object {
@@ -32,6 +33,8 @@ private:
 	float reticleDistance_;
 	uint32_t reticleTexture_;
 	Sprite* reticleSprite_ = nullptr;
+	bool isLockOn_ = false;
+	std::vector<Enemy*>targets_;
 
 	uint32_t shootColltime_;
 
@@ -47,7 +50,10 @@ private: // メンバ関数
 public:
 	void SetGameScenePtr(GameScene* gameScenePtr){ gameScenePtr_ = gameScenePtr; }
 	void SetCameraPtr(RailCamera* railcamera){ railcamera_ = railcamera; }
+	Vector2 GetReticlePos(){ return screenReticlePos_; }
 
 public:
 	void OnCollision()override;
+	void SetIsLockOn(bool flag){ isLockOn_ = flag; }
+	void LockOn(Enemy* enemy);
 };

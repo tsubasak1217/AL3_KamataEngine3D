@@ -50,7 +50,7 @@ public:
 	WorldTransform& GetWorldTransform() { return wt_; }
 	void SetViewProjection(ViewProjection* vp){ vp_ = vp; }
 	Vector3 GetWorldPos()const{ return worldPos_; }
-	Vector3 GetScreenPos()const{ return screenPos_; }
+	Vector2 GetScreenPos(){ return Vector2(screenPos_.x,screenPos_.y); }
 	Model* GetModel() { return model_; }
 	void SetModel(Model* model) { model_ = model; }
 	float GetRadius()const{ return radius_; }

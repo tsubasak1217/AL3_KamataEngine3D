@@ -1,5 +1,6 @@
 ﻿#include "player.h"
 #include "MyFunc.h"
+#include "Enemy.h"
 #include <algorithm>
 #include <cmath>
 #include <environment.h>
@@ -67,10 +68,6 @@ void Player::Update() {
 
 	// 実際に移動
 	Move();
-
-	// ワールド行列の作成
-	wt_.UpdateMatrix();
-	reticleWt_.UpdateMatrix();
 }
 
 void Player::Draw() {
@@ -84,10 +81,12 @@ void Player::DrawReticle()
 {
 
 	// レティクルをジョイスティックで移動
-	XINPUT_STATE joyState;
-	if(Input::GetInstance()->GetJoystickState(0, joyState)){
-		screenReticlePos_.x += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * 6.0f;
-		screenReticlePos_.y -= (float)joyState.Gamepad.sThumbRY / SHRT_MAX * 6.0f;
+	if(!isLockOn_){
+		XINPUT_STATE joyState;
+		if(Input::GetInstance()->GetJoystickState(0, joyState)){
+			screenReticlePos_.x += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * 6.0f;
+			screenReticlePos_.y -= (float)joyState.Gamepad.sThumbRY / SHRT_MAX * 6.0f;
+		}
 	}
 
 	
@@ -107,6 +106,9 @@ void Player::Shoot() {
 	if(shootColltime_ > 0){
 		shootColltime_--;
 	}
+
+	// 死んでいる敵の削除
+	std::erase_if(targets_, [](auto& enemy) { return !(enemy->GetIsAlive()); });
 
 	/*------------------------------------------*/
 	//			nearZ,farZ面上のワールド座標を計算
@@ -143,12 +145,25 @@ void Player::Shoot() {
 
 	if(joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER){
 		if(shootColltime_ <= 0) {
-			gameScenePtr_->AddPlayerBullet(new Bullet(
-				Multiply(wt_.translation_, RotateMatrix(wt_.parent_->rotation_)) + wt_.parent_->translation_,// 初期位置
-				wt_.rotation_,// 初期回転量
-				Normalize(rWPos - wpos)// 発射ベクトル
-			)
-			);
+
+			if(!isLockOn_){
+				gameScenePtr_->AddPlayerBullet(new Bullet(
+					Multiply(wt_.translation_, RotateMatrix(wt_.parent_->rotation_)) + wt_.parent_->translation_,// 初期位置
+					wt_.rotation_,// 初期回転量
+					Normalize(rWPos - wpos)// 発射ベクトル
+				)
+				);
+			} else{
+
+				for(int i = 0; i < targets_.size(); i++){
+					gameScenePtr_->AddPlayerBullet(new Bullet(
+						Multiply(wt_.translation_, RotateMatrix(wt_.parent_->rotation_)) + wt_.parent_->translation_,// 初期位置
+						wt_.rotation_,// 初期回転量
+						Normalize(targets_[i]->GetWorldPos() - worldPos_)// 発射ベクトル
+					)
+					);
+				}
+			}
 
 			shootColltime_ = 5;
 		}
@@ -203,10 +218,17 @@ void Player::Move() {
 	// プレイヤーに合わせてレティクルも移動
 	reticleWt_.translation_ = reticleVec_ * reticleDistance_;
 
+	// ワールド行列の作成
+	wt_.UpdateMatrix();
+	reticleWt_.UpdateMatrix();
+
 	// ワールド座標の更新
 	worldPos_ = 
 		Multiply(wt_.translation_, RotateMatrix(wt_.parent_->rotation_)) 
 		+ wt_.parent_->translation_;
+	// スクリーン座標の更新
+	screenPos_ = Multiply({ 0.0f,0.0f,0.0f }, Multiply(wt_.matWorld_, Multiply(vp_->matView, vp_->matProjection)));
+	
 }
 
 void Player::UpdateReticle()
@@ -216,4 +238,16 @@ void Player::UpdateReticle()
 
 void Player::OnCollision()
 {
+}
+
+void Player::LockOn(Enemy* enemy)
+{
+	isLockOn_ = true;
+	screenReticlePos_ = enemy->GetScreenPos();
+
+	if(!enemy){ return; }
+	for(int i = 0; i < targets_.size(); i++){
+		if(targets_[i] == enemy){ return; }
+	}
+	targets_.push_back(enemy);
 }

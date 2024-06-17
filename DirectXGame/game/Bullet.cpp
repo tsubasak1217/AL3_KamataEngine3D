@@ -47,11 +47,14 @@ void Bullet::Update() {
 		moveVec_ = moveVec_;
 	}
 
-	// ワールド座標の更新
-	worldPos_ = wt_.translation_;
 
 	// ワールド行列の作成
 	wt_.UpdateMatrix();
+
+	// ワールド座標の更新
+	worldPos_ = wt_.translation_;
+	// スクリーン座標の更新
+	screenPos_ = Multiply({ 0.0f,0.0f,0.0f }, Multiply(wt_.matWorld_, Multiply(vp_->matView, vp_->matProjection)));
 }
 
 void Bullet::Draw() { model_->Draw(wt_, *vp_, GH_); }

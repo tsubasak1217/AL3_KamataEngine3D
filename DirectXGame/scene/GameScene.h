@@ -12,10 +12,11 @@
 #include "skydome.h"
 #include "railCamera.h"
 #include "Bullet.h"
-#include "CollisionManager.h"
+
 
 class Player;
 class Enemy;
+class CollisionManager;
 
 /// <summary>
 /// ゲームシーン

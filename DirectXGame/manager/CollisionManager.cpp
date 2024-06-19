@@ -26,7 +26,7 @@ void CollisionManager::CheckReticleCollision()
 		float distance = Length(enemy->GetScreenPos() - pPlayer_->GetReticlePos());
 
 		if(distance < 50.0f){
-			pPlayer_->LockOn(enemy.get());
+			pPlayer_->LockOn(enemy);
 		}
 	}
 }
@@ -39,6 +39,8 @@ void CollisionManager::CheckCollision(){
 
 	// 対象が1以下のときは判定を取らない
 	if(colliders_.size() <= 1){ return; }
+	
+	CheckReticleCollision();
 
 	// 総当たりで当たり判定
 	std::list<Object*>::iterator itrA = colliders_.begin();
@@ -50,5 +52,4 @@ void CollisionManager::CheckCollision(){
 		}
 	}
 
-	CheckReticleCollision();
 }

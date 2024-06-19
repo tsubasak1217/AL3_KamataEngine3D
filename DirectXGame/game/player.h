@@ -6,6 +6,7 @@
 #include "Bullet.h"
 #include "railCamera.h"
 #include "sprite.h"
+#include <memory>
 
 class Enemy;
 class GameScene;
@@ -34,7 +35,7 @@ private:
 	uint32_t reticleTexture_;
 	Sprite* reticleSprite_ = nullptr;
 	bool isLockOn_ = false;
-	std::vector<Enemy*>targets_;
+	std::vector<std::weak_ptr<Enemy>>targets_;
 
 	uint32_t shootColltime_;
 
@@ -55,5 +56,5 @@ public:
 public:
 	void OnCollision()override;
 	void SetIsLockOn(bool flag){ isLockOn_ = flag; }
-	void LockOn(Enemy* enemy);
+	void LockOn(std::shared_ptr<Enemy> enemy);
 };

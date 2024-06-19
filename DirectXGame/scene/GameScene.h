@@ -61,7 +61,7 @@ private: // メンバ変数
 	Player* player_ = nullptr;
 
 	// 敵
-	std::list<std::unique_ptr<Enemy>> enemy_;
+	std::list<std::shared_ptr<Enemy>> enemy_;
 
 	// 弾
 	std::list<std::unique_ptr<Bullet>> enemyBullets_;

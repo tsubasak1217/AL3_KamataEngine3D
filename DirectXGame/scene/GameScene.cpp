@@ -80,7 +80,7 @@ void GameScene::Update() {
 	std::erase_if(enemyBullets_, [](auto& bullet) { return !(bullet->GetIsAlive()); });
 	std::erase_if(playerBullets_, [](auto& bullet) { return !(bullet->GetIsAlive()); });
 	// 死んでいる敵の削除
-	std::erase_if(enemy_, [](auto& enemy) { return !(enemy->GetIsAlive()); });
+	std::erase_if(enemy_,[](auto& enemy) {return !(enemy->GetIsAlive());});
 
 	// カメラの更新
 	railCamera_->Update();
@@ -105,7 +105,7 @@ void GameScene::Update() {
 	// 当たり判定
 	PushBackColliders();
 	collisionManager_->CheckCollision();
-	
+
 	// デバッグテキストの出力----------------------------------
 #ifdef _DEBUG
 
@@ -155,7 +155,7 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 
-	
+
 	skydome_->Draw(*railCamera_->GetViewProjection());// モデルの描画
 	player_->Draw();
 	for(auto& enemy : enemy_){ enemy->Draw(); }
@@ -196,9 +196,9 @@ void GameScene::PushBackColliders(){
 	// 衝突判定を取るオブジェクトをひとつにまとめる
 	std::list<Object*>colliders;
 	colliders.push_back(player_);
-	for(auto& playerBullet : playerBullets_){colliders.push_back(playerBullet.get());}
-	for(auto& enemy : enemy_){colliders.push_back(enemy.get());}
-	for(auto& enemyBullet : enemyBullets_){	colliders.push_back(enemyBullet.get());}
+	for(auto& playerBullet : playerBullets_){ colliders.push_back(playerBullet.get()); }
+	for(auto& enemy : enemy_){ colliders.push_back(enemy.get()); }
+	for(auto& enemyBullet : enemyBullets_){ colliders.push_back(enemyBullet.get()); }
 
 	// 作成したリストを衝突マネージャに送る
 	collisionManager_->SetColliders(colliders);
@@ -280,7 +280,7 @@ void GameScene::AddEnemyBullet(Bullet* bullet)
 {
 	enemyBullets_.push_back(std::make_unique<Bullet>());
 	enemyBullets_.back().reset(bullet);
-	enemyBullets_.back()->SetScale({0.5f,0.5f,3.0f});
+	enemyBullets_.back()->SetScale({ 0.5f,0.5f,3.0f });
 	enemyBullets_.back()->SetViewProjection(railCamera_->GetViewProjection());
 	enemyBullets_.back()->objectType_ = 0b10;
 }

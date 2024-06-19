@@ -14,7 +14,7 @@ public:
 
 public:
 	std::list<Object*>colliders_;
-	std::list<std::unique_ptr<Enemy>>* pEnemy_;
+	std::list<std::shared_ptr<Enemy>>* pEnemy_;
 	Player* pPlayer_ = nullptr;
 private:
 	void CheckCollisionPair(Object* obj1, Object* obj2);

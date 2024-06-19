@@ -108,7 +108,15 @@ void Player::Shoot() {
 	}
 
 	// 死んでいる敵の削除
-	std::erase_if(targets_, [](auto& enemy) { return !(enemy->GetIsAlive()); });
+	//std::erase_if(targets_, [](auto& enemy) { return !enemy; });
+	for(int i = 0; i < targets_.size(); i++){
+		if(targets_[i].expired()){
+			targets_.erase(targets_.begin() + i);
+		}
+	}
+	for(int i = 0; i < targets_.size(); i++){
+	
+	}
 
 	/*------------------------------------------*/
 	//			nearZ,farZ面上のワールド座標を計算
@@ -159,7 +167,7 @@ void Player::Shoot() {
 					gameScenePtr_->AddPlayerBullet(new Bullet(
 						Multiply(wt_.translation_, RotateMatrix(wt_.parent_->rotation_)) + wt_.parent_->translation_,// 初期位置
 						wt_.rotation_,// 初期回転量
-						Normalize(targets_[i]->GetWorldPos() - worldPos_)// 発射ベクトル
+						Normalize(targets_[i].lock()->GetWorldPos() - worldPos_)// 発射ベクトル
 					)
 					);
 				}
@@ -240,14 +248,14 @@ void Player::OnCollision()
 {
 }
 
-void Player::LockOn(Enemy* enemy)
+void Player::LockOn(std::shared_ptr<Enemy> enemy)
 {
 	isLockOn_ = true;
 	screenReticlePos_ = enemy->GetScreenPos();
 
-	if(!enemy){ return; }
 	for(int i = 0; i < targets_.size(); i++){
-		if(targets_[i] == enemy){ return; }
+		if(targets_[i].lock() == enemy){ return; }
 	}
+
 	targets_.push_back(enemy);
 }

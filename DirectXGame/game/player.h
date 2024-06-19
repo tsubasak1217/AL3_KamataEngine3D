@@ -36,6 +36,7 @@ private:
 	Sprite* reticleSprite_ = nullptr;
 	bool isLockOn_ = false;
 	std::vector<std::weak_ptr<Enemy>>targets_;
+	std::vector<std::unique_ptr<Sprite>>lockOnReticles_;
 
 	uint32_t shootColltime_;
 

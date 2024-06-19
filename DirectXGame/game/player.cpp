@@ -81,15 +81,11 @@ void Player::DrawReticle()
 {
 
 	// レティクルをジョイスティックで移動
-	if(!isLockOn_){
-		XINPUT_STATE joyState;
-		if(Input::GetInstance()->GetJoystickState(0, joyState)){
-			screenReticlePos_.x += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * 6.0f;
-			screenReticlePos_.y -= (float)joyState.Gamepad.sThumbRY / SHRT_MAX * 6.0f;
-		}
+	XINPUT_STATE joyState;
+	if(Input::GetInstance()->GetJoystickState(0, joyState)){
+		screenReticlePos_.x += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * 6.0f;
+		screenReticlePos_.y -= (float)joyState.Gamepad.sThumbRY / SHRT_MAX * 6.0f;
 	}
-
-	
 
 	// 範囲内に収める
 	screenReticlePos_.x = std::clamp(screenReticlePos_.x, 0.0f, kWindowSize.x);
@@ -98,6 +94,11 @@ void Player::DrawReticle()
 	// 座標を更新して描画
 	reticleSprite_->SetPosition(Vector2(screenReticlePos_.x, screenReticlePos_.y));
 	reticleSprite_->Draw();
+	// 敵のスクリーン座標にレティクルを追従させ,描画
+	for(int i = 0; i < lockOnReticles_.size(); i++){
+		lockOnReticles_[i]->SetPosition(targets_[i].lock()->GetScreenPos());
+		lockOnReticles_[i]->Draw();
+	}
 }
 
 void Player::Shoot() {
@@ -107,16 +108,16 @@ void Player::Shoot() {
 		shootColltime_--;
 	}
 
-	// 死んでいる敵の削除
-	//std::erase_if(targets_, [](auto& enemy) { return !enemy; });
+	// 死んでいる敵をターゲットリストから削除
 	for(int i = 0; i < targets_.size(); i++){
 		if(targets_[i].expired()){
 			targets_.erase(targets_.begin() + i);
+			lockOnReticles_.erase(lockOnReticles_.begin() + i);
 		}
 	}
-	for(int i = 0; i < targets_.size(); i++){
-	
-	}
+
+	// ターゲットがいなければロックオンをしない
+	if(targets_.size() == 0){ isLockOn_ = false; }
 
 	/*------------------------------------------*/
 	//			nearZ,farZ面上のワールド座標を計算
@@ -141,8 +142,6 @@ void Player::Shoot() {
 
 	Vector3 wpos = Multiply(wt_.translation_, RotateMatrix(wt_.parent_->rotation_)) + wt_.parent_->translation_;
 	Vector3 rWPos = nearPos + Normalize(farPos - nearPos) * reticleDistance_;
-	//Vector3 reticleWorldPos = Normalize(farPos - nearPos) * (wt_.translation_.z + reticleDistance_);
-	//reticleWorldPos = Multiply(reticleWorldPos, Multiply(wt_.matWorld_, wt_.parent_->matWorld_));
 
 	/*------------------------------------------*/
 	//					発射
@@ -231,12 +230,12 @@ void Player::Move() {
 	reticleWt_.UpdateMatrix();
 
 	// ワールド座標の更新
-	worldPos_ = 
-		Multiply(wt_.translation_, RotateMatrix(wt_.parent_->rotation_)) 
+	worldPos_ =
+		Multiply(wt_.translation_, RotateMatrix(wt_.parent_->rotation_))
 		+ wt_.parent_->translation_;
 	// スクリーン座標の更新
 	screenPos_ = Multiply({ 0.0f,0.0f,0.0f }, Multiply(wt_.matWorld_, Multiply(vp_->matView, vp_->matProjection)));
-	
+
 }
 
 void Player::UpdateReticle()
@@ -251,11 +250,17 @@ void Player::OnCollision()
 void Player::LockOn(std::shared_ptr<Enemy> enemy)
 {
 	isLockOn_ = true;
-	screenReticlePos_ = enemy->GetScreenPos();
 
 	for(int i = 0; i < targets_.size(); i++){
 		if(targets_[i].lock() == enemy){ return; }
 	}
 
+	// 敵をターゲットリストに入れる
 	targets_.push_back(enemy);
+	// スプライトを敵の座標にpushBack
+	lockOnReticles_.push_back(std::make_unique<Sprite>());
+	lockOnReticles_.back().reset(
+		Sprite::Create(reticleTexture_, enemy->GetScreenPos(), { 0xff,0xff,0xff,0xff }, { 0.5f,0.5f })
+	);
+	lockOnReticles_.back()->SetSize(lockOnReticles_.back()->GetSize() * 0.2f);
 }

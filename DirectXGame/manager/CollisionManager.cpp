@@ -21,7 +21,6 @@ void CollisionManager::CheckCollisionPair(Object* obj1, Object* obj2){
 void CollisionManager::CheckReticleCollision()
 {
 	// レティクルと敵の距離を測りロックオン処理
-	pPlayer_->SetIsLockOn(false);
 	for(auto& enemy : *pEnemy_){
 		float distance = Length(enemy->GetScreenPos() - pPlayer_->GetReticlePos());
 

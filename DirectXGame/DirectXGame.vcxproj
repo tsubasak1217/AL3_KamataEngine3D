@@ -111,6 +111,7 @@
     <ClCompile Include="base\DirectXCommon.cpp" />
     <ClCompile Include="base\WinApp.cpp" />
     <ClCompile Include="game\Bullet.cpp" />
+    <ClCompile Include="game\Camera.cpp" />
     <ClCompile Include="game\Enemy.cpp" />
     <ClCompile Include="game\EnemyState.cpp" />
     <ClCompile Include="game\Object.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="base\WinApp.h" />
     <ClInclude Include="config\environment.h" />
     <ClInclude Include="game\Bullet.h" />
+    <ClInclude Include="game\Camera.h" />
     <ClInclude Include="game\Enemy.h" />
     <ClInclude Include="game\EnemyState.h" />
     <ClInclude Include="game\Object.h" />

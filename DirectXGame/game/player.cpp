@@ -72,7 +72,7 @@ void Player::Update() {
 
 void Player::Draw() {
 
-	model_->Draw(wt_, *vp_, GH_);
+	model_->Draw(wt_, *camera_.GetViewProjection(), GH_);
 	//model_->Draw(*wt_.parent_, vp, GH_);
 }
 
@@ -241,6 +241,12 @@ void Player::Move() {
 void Player::UpdateReticle()
 {
 
+}
+
+void Player::UpdateCamera()
+{
+	camera_.SetWorldTransform(wt_);
+	camera_.UpdateCamera();
 }
 
 void Player::OnCollision()

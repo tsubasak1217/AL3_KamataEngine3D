@@ -156,7 +156,7 @@ void GameScene::Draw() {
 	/// </summary>
 
 
-	skydome_->Draw(*railCamera_->GetViewProjection());// モデルの描画
+	skydome_->Draw(*player_->GetCamera()->GetViewProjection());// モデルの描画
 	player_->Draw();
 	for(auto& enemy : enemy_){ enemy->Draw(); }
 	for(auto& bullet : enemyBullets_) {
@@ -256,7 +256,7 @@ void GameScene::UpdateEnemyCommands()
 			enemy_.back()->SetPlayerPtr(player_);
 			enemy_.back()->SetGameScenePtr(this);// ゲームシーンのポインタを持たせる
 			enemy_.back()->SetModel(Model::Create());
-			enemy_.back()->SetViewProjection(railCamera_->GetViewProjection());
+			enemy_.back()->SetViewProjection(player_->GetCamera()->GetViewProjection());
 		}
 	}
 }
@@ -281,7 +281,7 @@ void GameScene::AddEnemyBullet(Bullet* bullet)
 	enemyBullets_.push_back(std::make_unique<Bullet>());
 	enemyBullets_.back().reset(bullet);
 	enemyBullets_.back()->SetScale({ 0.5f,0.5f,3.0f });
-	enemyBullets_.back()->SetViewProjection(railCamera_->GetViewProjection());
+	enemyBullets_.back()->SetViewProjection(player_->GetCamera()->GetViewProjection());
 	enemyBullets_.back()->objectType_ = 0b10;
 }
 
@@ -289,6 +289,6 @@ void GameScene::AddPlayerBullet(Bullet* bullet)
 {
 	playerBullets_.push_back(std::make_unique<Bullet>());
 	playerBullets_.back().reset(bullet);
-	playerBullets_.back()->SetViewProjection(railCamera_->GetViewProjection());
+	playerBullets_.back()->SetViewProjection(player_->GetCamera()->GetViewProjection());
 	playerBullets_.back()->objectType_ = 0b1;
 }

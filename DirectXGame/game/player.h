@@ -5,6 +5,7 @@
 #include "Object.h"
 #include "Bullet.h"
 #include "railCamera.h"
+#include "Camera.h"
 #include "sprite.h"
 #include <memory>
 
@@ -40,7 +41,10 @@ private:
 
 	uint32_t shootColltime_;
 
+	// レールカメラのポインタ
 	RailCamera* railcamera_ = nullptr;
+	//プレイヤー視点のカメラ
+	Camera camera_;
 
 private: // メンバ関数
 	void Shoot();
@@ -48,11 +52,13 @@ private: // メンバ関数
 	void Translate();
 	void Move();
 	void UpdateReticle();
+	void UpdateCamera();
 
 public:
 	void SetGameScenePtr(GameScene* gameScenePtr){ gameScenePtr_ = gameScenePtr; }
 	void SetCameraPtr(RailCamera* railcamera){ railcamera_ = railcamera; }
 	Vector2 GetReticlePos(){ return screenReticlePos_; }
+	Camera* GetCamera(){ return &camera_; }
 
 public:
 	void OnCollision()override;

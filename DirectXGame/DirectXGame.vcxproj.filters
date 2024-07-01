@@ -120,6 +120,9 @@
     <ClCompile Include="manager\CollisionManager.cpp">
       <Filter>manager</Filter>
     </ClCompile>
+    <ClCompile Include="game\Camera.cpp">
+      <Filter>ソース ファイル\game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3d\ViewProjection.h">
@@ -250,6 +253,9 @@
     </ClInclude>
     <ClInclude Include="manager\CollisionManager.h">
       <Filter>manager</Filter>
+    </ClInclude>
+    <ClInclude Include="game\Camera.h">
+      <Filter>ヘッダー ファイル\game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
